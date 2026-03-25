@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-inter-tight);
+}
+
+:root {
+  --atacama-black: #000000;
+  --atacama-white: #ffffff;
+  --atacama-silver: #dbdcdd;
+  --atacama-orange: #e13f07;
+  --atacama-gray-90: #1a1a1a;
+  --atacama-gray-80: #2a2a2a;
+  --atacama-gray-70: #3a3a3a;
+  --atacama-gray-60: #4a4a4a;
+  --atacama-gray-50: #5a5a5a;
+  --atacama-gray-30: #8a8a8a;
+  --atacama-gray-10: #cacaca;
+}
+
+body {
+  background-color: var(--atacama-black);
+  color: var(--atacama-white);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--atacama-gray-90);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--atacama-gray-60);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--atacama-gray-50);
+}
