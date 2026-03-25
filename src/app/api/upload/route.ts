@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs"
+import { extractText } from "unpdf"
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,20 +14,11 @@ export async function POST(request: NextRequest) {
     let text = ""
 
     if (file.name.toLowerCase().endsWith(".pdf")) {
-      const uint8Array = new Uint8Array(buffer)
-      const pdf = await getDocument({ data: uint8Array }).promise
-      const pages: string[] = []
-
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i)
-        const content = await page.getTextContent()
-        const pageText = content.items
-          .map((item: { str?: string }) => item.str || "")
-          .join(" ")
-        pages.push(pageText)
-      }
-
-      text = pages.join("\n\n")
+      const result = await extractText(new Uint8Array(buffer))
+      // result.text is an array of strings (one per page)
+      text = Array.isArray(result.text)
+        ? result.text.join("\n\n")
+        : String(result.text)
     } else {
       text = buffer.toString("utf-8")
     }
