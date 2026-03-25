@@ -77,9 +77,10 @@ Voce DEVE retornar um JSON valido com a seguinte estrutura (sem markdown code fe
 export function getGenerationSystemPrompt(planName: string): string {
   const engine = loadFile("prompts/PROPOSAL_ENGINE_v2.md")
   const tipoA = loadFile("prompts/PROPOSAL_ENGINE_TIPO_A.md")
-  const brandkit = loadFile("prompts/BRANDKIT_REFERENCE.md")
   const ancoragem = loadFile("prompts/ANCORAGEM_PRECOS.md")
   const escassez = loadFile("prompts/ELEMENTOS_ESCASSEZ.md")
+  const catalogo = loadFile("plans/CATALOGO_PLANOS.md")
+  const templateCSS = loadFile("prompts/TEMPLATE_CSS.css")
 
   // Load specific plan file
   const planFileMap: Record<string, string> = {
@@ -109,9 +110,93 @@ ${tipoA}
 
 ---
 
-# BRAND KIT REFERENCE
+# CSS DO TEMPLATE APROVADO (USAR EXATAMENTE ESTE CSS)
 
-${brandkit}
+Voce DEVE copiar este CSS inteiro no <style> do HTML gerado. NAO invente classes novas. Use EXATAMENTE estas classes.
+
+\`\`\`css
+${templateCSS}
+\`\`\`
+
+---
+
+# ESTRUTURA HTML OBRIGATORIA (seguir este esqueleto exato)
+
+Cada secao deve seguir este padrao estrutural:
+
+## SLIDE 1: HERO (class="slide dark grain")
+- Background: radial-gradient com orange sutil (0.06 opacity)
+- Gridlines (div.gridlines com gl-v, gl-h, gl-dot)
+- Container centralizado com:
+  - Logo SVG Atacama (o A estilizado, opacity 0.35)
+  - p.eyebrow: "PROPOSTA COMERCIAL EXCLUSIVA . MES ANO"
+  - h1.display: Nome da empresa (font-size clamp 3.5rem-6rem)
+  - p: frase de impacto sobre o prospect (color var(--gray-30))
+  - span.urgencia-badge: "VALIDA ATE [data +10 dias]"
+  - p: "Preparado para [nome] / [empresa] . [localizacao]"
+- Coordenadas nos cantos (span.coord)
+
+## SLIDE 2: VERDADE INCONVENIENTE (class="slide dark grain")
+- Gridlines
+- p.eyebrow: "01 / VERDADE INCONVENIENTE"
+- Grid 2 colunas: headline display + cards de diagnostico
+- div.truth-quote com citacao provocativa
+
+## SLIDE 3: SOLUCAO (class="slide silver-bg")
+- p.eyebrow-dark: "02 / O QUE VAMOS CONSTRUIR"
+- Grid de cards (card-white) com icones SVG animados (anim-icon)
+- Cada card: icone + titulo + descricao
+- team-badges no final
+
+## SLIDE 4: METODO COSMOS (class="cosmos-section-v10 dark")
+- SVG orbital animado (cosmos-svg-wrap)
+- Painel lateral (cosmos-content-panel) com carrossel:
+  - cosmos-card com cosmos-badge, cosmos-card-h, cosmos-card-p
+  - cosmos-nav com cosmos-dots e cosmos-btn
+
+## SLIDE 5: CREDIBILIDADE (class="slide dark" / cred-section-v10)
+- p.eyebrow: "04 / NUMEROS E HISTORICO"
+- Grid de numeros (cred-numbers-v10): 4 colunas com contadores animados
+- Badges Google Partner
+- Testimonial cards (t-grid com t-card)
+- Logo marquee de clientes (logo-marquee)
+
+## SLIDE 6: INVESTIMENTO (class="slide dark" / invest-v10)
+- p.eyebrow: "05 / INVESTIMENTO"
+- Bloco 1: Tabela de ancoragem (invest-anchor-table)
+- Bloco 2: Price card (invest-price-card) com preco grande
+- Bloco 3: Feature checklist (feat-list com feat-item)
+- Bloco 4: Setup card com animacao strikethrough
+- Scarcity box
+
+## SLIDE 7: PROXIMOS PASSOS (class="slide silver-bg")
+- p.eyebrow-dark: "06 / PROXIMOS PASSOS"
+- Roadmap vertical (div.roadmap com roadmap-item)
+- Formulario "Quero Contratar" multi-step
+
+## SLIDE 8: FECHAMENTO (class="slide dark grain")
+- Logo Atacama centralizado
+- h2.display: "Bem-vindo a Clareza."
+- Coordenadas nos cantos
+
+---
+
+# JAVASCRIPT OBRIGATORIO (incluir no final do <body>)
+
+O HTML deve incluir scripts para:
+1. IntersectionObserver para .reveal (adicionar class "visible")
+2. IntersectionObserver para .gridlines (adicionar class "gl-active")
+3. Contadores animados (countUp nos .cred-num-value-v10)
+4. Carrossel COSMOS (cosmos-card navigation)
+5. Animacao strikethrough no setup (struck/revealed classes)
+6. Feature checklist reveal (feat-item.shown)
+7. Validacao do formulario de contratacao
+
+---
+
+# CATALOGO DE PLANOS
+
+${catalogo}
 
 ---
 
@@ -136,16 +221,13 @@ ${planContent}` : ""}
 # REGRAS OBRIGATORIAS DE OUTPUT
 
 1. Retorne APENAS o HTML completo, sem markdown code fences
-2. O HTML deve ser self-contained (CSS inline no <style>, JS inline no <script>)
+2. O HTML deve ser self-contained com o CSS acima no <style> e JS no <script>
 3. Usar fontes Inter Tight e Cormorant Unicase via Google Fonts <link>
-4. Cores: preto (#000), branco (#FFF), prata (#DBDCDD), laranja (#E13F07 apenas atmosferico)
-5. Intercalar secoes pretas e pratas
-6. 8 secoes obrigatorias: Hero, Verdade Inconveniente, Solucao, Metodo Cosmos, Credibilidade, Investimento, Proximos Passos, Fechamento
-7. Formulario "Quero Contratar" com campos: nome, CNPJ/CPF, email, telefone, endereco
-8. O formulario deve fazer POST para a URL: {{FORM_ACTION_URL}}
-9. Responsivo: breakpoints em 1024px, 768px, 480px
-10. Logo Atacama Digital completo (horizontal), nunca apenas o simbolo "A"
-11. Portugues brasileiro com acentuacao correta
-12. Graficos e elementos interativos (contadores animados, barras de comparacao)
-13. Badge de urgencia com validade de 10 dias`
+4. Use EXATAMENTE as classes CSS definidas acima. NAO invente classes novas
+5. 8 secoes obrigatorias conforme estrutura acima
+6. Formulario "Quero Contratar" com POST para: {{FORM_ACTION_URL}}
+7. Responsivo (ja esta no CSS: breakpoints 768px)
+8. Logo Atacama: SVG do A estilizado (viewBox 0 0 1700 1240, path M1682.36...)
+9. Portugues brasileiro com acentuacao correta
+10. Badge de urgencia com validade de 10 dias a partir de hoje`
 }
