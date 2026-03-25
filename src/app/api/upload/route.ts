@@ -13,9 +13,9 @@ export async function POST(request: NextRequest) {
     let text = ""
 
     if (file.name.toLowerCase().endsWith(".pdf")) {
-      // Dynamic import to avoid bundler issues
-      const pdfModule = await import("pdf-parse")
-      const pdfParse = "default" in pdfModule ? (pdfModule.default as (buf: Buffer) => Promise<{text: string}>) : (pdfModule as unknown as (buf: Buffer) => Promise<{text: string}>)
+      // pdf-parse v1.1.1 exports a function directly
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const pdfParse = require("pdf-parse") as (buf: Buffer) => Promise<{ text: string }>
       const data = await pdfParse(buffer)
       text = data.text
     } else {
