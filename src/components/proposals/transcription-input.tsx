@@ -15,12 +15,51 @@ export function TranscriptionInput({ onAnalyze, loading }: TranscriptionInputPro
   const [transcription, setTranscription] = useState("")
   const [fileName, setFileName] = useState("")
   const [dragActive, setDragActive] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState("")
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const readFile = useCallback(async (file: File) => {
-    const text = await file.text()
-    setTranscription(text)
-    setFileName(file.name)
+    // Arquivos de texto simples: ler direto no browser
+    const textExtensions = [".txt", ".md", ".text"]
+    const isTextFile = textExtensions.some((ext) =>
+      file.name.toLowerCase().endsWith(ext)
+    )
+
+    if (isTextFile) {
+      const text = await file.text()
+      setTranscription(text)
+      setFileName(file.name)
+      return
+    }
+
+    // PDF e outros: enviar para o servidor processar
+    setUploading(true)
+    setUploadError("")
+    try {
+      const formData = new FormData()
+      formData.append("file", file)
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || "Erro ao processar arquivo")
+      }
+
+      const result = await response.json()
+      setTranscription(result.text)
+      setFileName(result.fileName)
+    } catch (err) {
+      setUploadError(
+        err instanceof Error ? err.message : "Erro ao processar arquivo"
+      )
+    } finally {
+      setUploading(false)
+    }
   }, [])
 
   function handleDrag(e: React.DragEvent) {
@@ -75,8 +114,15 @@ export function TranscriptionInput({ onAnalyze, loading }: TranscriptionInputPro
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Upload error */}
+          {uploadError && (
+            <div className="rounded-lg border border-red-900 bg-red-950/50 p-3 text-sm text-red-400">
+              {uploadError}
+            </div>
+          )}
+
           {/* Drop zone */}
-          {!transcription && (
+          {!transcription && !uploading && (
             <div
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
@@ -94,7 +140,7 @@ export function TranscriptionInput({ onAnalyze, loading }: TranscriptionInputPro
                 Arraste o arquivo aqui
               </p>
               <p className="mt-1 text-xs text-neutral-500">
-                ou clique para selecionar
+                ou clique para selecionar (.txt, .md, .pdf)
               </p>
               <input
                 ref={fileInputRef}
@@ -127,8 +173,17 @@ export function TranscriptionInput({ onAnalyze, loading }: TranscriptionInputPro
             </div>
           )}
 
+          {/* Uploading state */}
+          {uploading && (
+            <div className="flex flex-col items-center justify-center rounded-xl border border-neutral-800 bg-neutral-900/50 p-12">
+              <Loader2 className="h-8 w-8 animate-spin text-[#E13F07] mb-3" />
+              <p className="text-sm font-medium">Processando arquivo...</p>
+              <p className="mt-1 text-xs text-neutral-500">Extraindo texto do PDF</p>
+            </div>
+          )}
+
           {/* Separator */}
-          {!transcription && (
+          {!transcription && !uploading && (
             <div className="flex items-center gap-4">
               <div className="h-px flex-1 bg-neutral-800" />
               <span className="text-xs text-neutral-500">ou cole diretamente</span>
