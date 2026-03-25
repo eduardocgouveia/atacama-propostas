@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs"
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,11 +14,20 @@ export async function POST(request: NextRequest) {
     let text = ""
 
     if (file.name.toLowerCase().endsWith(".pdf")) {
-      // pdf-parse v1.1.1 exports a function directly
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const pdfParse = require("pdf-parse") as (buf: Buffer) => Promise<{ text: string }>
-      const data = await pdfParse(buffer)
-      text = data.text
+      const uint8Array = new Uint8Array(buffer)
+      const pdf = await getDocument({ data: uint8Array }).promise
+      const pages: string[] = []
+
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i)
+        const content = await page.getTextContent()
+        const pageText = content.items
+          .map((item: { str?: string }) => item.str || "")
+          .join(" ")
+        pages.push(pageText)
+      }
+
+      text = pages.join("\n\n")
     } else {
       text = buffer.toString("utf-8")
     }
