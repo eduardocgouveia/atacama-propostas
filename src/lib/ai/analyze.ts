@@ -1,4 +1,4 @@
-import { anthropic, MODELS } from "./client"
+import { getClient, MODELS } from "./client"
 import { getAnalysisSystemPrompt } from "./prompts"
 
 export interface AnalysisResult {
@@ -42,7 +42,7 @@ export async function analyzeTranscription(
 ): Promise<AnalysisResult> {
   const systemPrompt = getAnalysisSystemPrompt()
 
-  const response = await anthropic.messages.create({
+  const response = await getClient().messages.create({
     model: MODELS.analysis,
     max_tokens: 4096,
     system: systemPrompt,

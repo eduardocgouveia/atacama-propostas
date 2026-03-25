@@ -1,4 +1,4 @@
-import { anthropic, MODELS } from "./client"
+import { getClient, MODELS } from "./client"
 import { getContentPrompt } from "./prompts"
 import { renderProposal, type ProposalContent } from "../template-engine"
 import type { AnalysisResult } from "./analyze"
@@ -32,7 +32,7 @@ OBJECOES: ${analysis.analysis.keyObjections.join("; ")}
 GATILHOS: ${analysis.analysis.emotionalTriggers.join(", ")}
 PERSONA: ${analysis.analysis.personaMatch} (${analysis.analysis.personaAdherence}%)`
 
-  const response = await anthropic.messages.create({
+  const response = await getClient().messages.create({
     model: MODELS.analysis, // Sonnet - rapido e barato
     max_tokens: 4096,
     system: systemPrompt,
