@@ -74,13 +74,10 @@ Voce DEVE retornar um JSON valido com a seguinte estrutura (sem markdown code fe
 }`
 }
 
-export function getGenerationSystemPrompt(planName: string): string {
-  const engine = loadFile("prompts/PROPOSAL_ENGINE_v2.md")
-  const tipoA = loadFile("prompts/PROPOSAL_ENGINE_TIPO_A.md")
+export function getContentPrompt(planName: string): string {
   const ancoragem = loadFile("prompts/ANCORAGEM_PRECOS.md")
   const escassez = loadFile("prompts/ELEMENTOS_ESCASSEZ.md")
   const catalogo = loadFile("plans/CATALOGO_PLANOS.md")
-  const templateCSS = loadFile("prompts/TEMPLATE_CSS.css")
 
   // Load specific plan file
   const planFileMap: Record<string, string> = {
@@ -100,134 +97,104 @@ export function getGenerationSystemPrompt(planName: string): string {
   const planFile = planFileMap[planName.toUpperCase()] || ""
   const planContent = planFile ? loadFile(planFile) : ""
 
-  return `${engine}
-
----
-
-# FORMATO: TIPO A (email/reader-alone)
-
-${tipoA}
-
----
-
-# CSS DO TEMPLATE APROVADO (USAR EXATAMENTE ESTE CSS)
-
-Voce DEVE copiar este CSS inteiro no <style> do HTML gerado. NAO invente classes novas. Use EXATAMENTE estas classes.
-
-\`\`\`css
-${templateCSS}
-\`\`\`
-
----
-
-# ESTRUTURA HTML OBRIGATORIA (seguir este esqueleto exato)
-
-Cada secao deve seguir este padrao estrutural:
-
-## SLIDE 1: HERO (class="slide dark grain")
-- Background: radial-gradient com orange sutil (0.06 opacity)
-- Gridlines (div.gridlines com gl-v, gl-h, gl-dot)
-- Container centralizado com:
-  - Logo SVG Atacama (o A estilizado, opacity 0.35)
-  - p.eyebrow: "PROPOSTA COMERCIAL EXCLUSIVA . MES ANO"
-  - h1.display: Nome da empresa (font-size clamp 3.5rem-6rem)
-  - p: frase de impacto sobre o prospect (color var(--gray-30))
-  - span.urgencia-badge: "VALIDA ATE [data +10 dias]"
-  - p: "Preparado para [nome] / [empresa] . [localizacao]"
-- Coordenadas nos cantos (span.coord)
-
-## SLIDE 2: VERDADE INCONVENIENTE (class="slide dark grain")
-- Gridlines
-- p.eyebrow: "01 / VERDADE INCONVENIENTE"
-- Grid 2 colunas: headline display + cards de diagnostico
-- div.truth-quote com citacao provocativa
-
-## SLIDE 3: SOLUCAO (class="slide silver-bg")
-- p.eyebrow-dark: "02 / O QUE VAMOS CONSTRUIR"
-- Grid de cards (card-white) com icones SVG animados (anim-icon)
-- Cada card: icone + titulo + descricao
-- team-badges no final
-
-## SLIDE 4: METODO COSMOS (class="cosmos-section-v10 dark")
-- SVG orbital animado (cosmos-svg-wrap)
-- Painel lateral (cosmos-content-panel) com carrossel:
-  - cosmos-card com cosmos-badge, cosmos-card-h, cosmos-card-p
-  - cosmos-nav com cosmos-dots e cosmos-btn
-
-## SLIDE 5: CREDIBILIDADE (class="slide dark" / cred-section-v10)
-- p.eyebrow: "04 / NUMEROS E HISTORICO"
-- Grid de numeros (cred-numbers-v10): 4 colunas com contadores animados
-- Badges Google Partner
-- Testimonial cards (t-grid com t-card)
-- Logo marquee de clientes (logo-marquee)
-
-## SLIDE 6: INVESTIMENTO (class="slide dark" / invest-v10)
-- p.eyebrow: "05 / INVESTIMENTO"
-- Bloco 1: Tabela de ancoragem (invest-anchor-table)
-- Bloco 2: Price card (invest-price-card) com preco grande
-- Bloco 3: Feature checklist (feat-list com feat-item)
-- Bloco 4: Setup card com animacao strikethrough
-- Scarcity box
-
-## SLIDE 7: PROXIMOS PASSOS (class="slide silver-bg")
-- p.eyebrow-dark: "06 / PROXIMOS PASSOS"
-- Roadmap vertical (div.roadmap com roadmap-item)
-- Formulario "Quero Contratar" multi-step
-
-## SLIDE 8: FECHAMENTO (class="slide dark grain")
-- Logo Atacama centralizado
-- h2.display: "Bem-vindo a Clareza."
-- Coordenadas nos cantos
-
----
-
-# JAVASCRIPT OBRIGATORIO (incluir no final do <body>)
-
-O HTML deve incluir scripts para:
-1. IntersectionObserver para .reveal (adicionar class "visible")
-2. IntersectionObserver para .gridlines (adicionar class "gl-active")
-3. Contadores animados (countUp nos .cred-num-value-v10)
-4. Carrossel COSMOS (cosmos-card navigation)
-5. Animacao strikethrough no setup (struck/revealed classes)
-6. Feature checklist reveal (feat-item.shown)
-7. Validacao do formulario de contratacao
-
----
+  return `Voce e o motor comercial da Atacama Digital. Sua funcao e gerar o CONTEUDO TEXTUAL para preencher um template HTML fixo de proposta comercial. NAO gere HTML. Retorne APENAS JSON.
 
 # CATALOGO DE PLANOS
 
 ${catalogo}
 
----
-
 # ANCORAGEM DE PRECOS
 
 ${ancoragem}
-
----
 
 # ELEMENTOS DE ESCASSEZ
 
 ${escassez}
 
-${planContent ? `---
+${planContent ? `# DETALHES DO PLANO: ${planName}\n\n${planContent}` : ""}
 
-# DETALHES DO PLANO: ${planName}
+# REGRAS DE CONTEUDO
 
-${planContent}` : ""}
+- Portugues brasileiro com acentuacao correta
+- Tom: firme, lucido, provocativo. Sem corporativismo
+- Use as palavras exatas que o prospect usou na call
+- Frases curtas, paragrafos curtos, alto impacto
+- A data de validade deve ser 10 dias a partir de hoje (${new Date().toLocaleDateString("pt-BR")})
+- Nunca use: "solucao integrada", "confia no processo", "ROI garantido"
 
----
+# FORMATO DE OUTPUT
 
-# REGRAS OBRIGATORIAS DE OUTPUT
+Retorne APENAS um JSON valido (sem markdown code fences) com esta estrutura:
 
-1. Retorne APENAS o HTML completo, sem markdown code fences
-2. O HTML deve ser self-contained com o CSS acima no <style> e JS no <script>
-3. Usar fontes Inter Tight e Cormorant Unicase via Google Fonts <link>
-4. Use EXATAMENTE as classes CSS definidas acima. NAO invente classes novas
-5. 8 secoes obrigatorias conforme estrutura acima
-6. Formulario "Quero Contratar" com POST para: {{FORM_ACTION_URL}}
-7. Responsivo (ja esta no CSS: breakpoints 768px)
-8. Logo Atacama: SVG do A estilizado (viewBox 0 0 1700 1240, path M1682.36...)
-9. Portugues brasileiro com acentuacao correta
-10. Badge de urgencia com validade de 10 dias a partir de hoje`
+{
+  "hero": {
+    "monthYear": "MES ANO em maiusculas (ex: MARCO 2026)",
+    "companyName": "Nome da empresa",
+    "tagline": "Frase de impacto sobre o prospect (1-2 linhas)",
+    "expiryDate": "DD DE MES DE ANO em maiusculas",
+    "contactName": "Nome do contato",
+    "location": "Cidade / Estado"
+  },
+  "truth": {
+    "headline": "Verdade inconveniente em 1-2 frases impactantes",
+    "quote": "Citacao provocativa usando palavras do prospect da call",
+    "cards": [
+      {"eyebrow": "TEMA", "title": "Titulo impactante (4-8 palavras)", "description": "Descricao detalhada (2-3 frases)"},
+      {"eyebrow": "TEMA", "title": "Titulo impactante", "description": "Descricao detalhada"},
+      {"eyebrow": "TEMA", "title": "Titulo impactante", "description": "Descricao detalhada"}
+    ]
+  },
+  "solution": {
+    "headline": "Headline da solucao (pode usar <br> para quebra)",
+    "description": "Descricao da solucao em 2-3 frases",
+    "cards": [
+      {"title": "Nome do servico/entrega", "description": "O que entregamos (1-2 frases)"},
+      {"title": "Nome do servico/entrega", "description": "O que entregamos"},
+      {"title": "Nome do servico/entrega", "description": "O que entregamos"},
+      {"title": "Nome do servico/entrega", "description": "O que entregamos"},
+      {"title": "Nome do servico/entrega", "description": "O que entregamos"}
+    ],
+    "teamBadges": ["Badge 1", "Badge 2", "Badge 3", "Badge 4", "Badge 5"]
+  },
+  "cosmos": {
+    "cards": [
+      {"badge": "ETAPA 01 / 05", "title": "Imersao e Diagnostico", "description": "Descricao da etapa (2-3 frases)", "deliverable": "Entregavel principal da etapa"},
+      {"badge": "ETAPA 02 / 05", "title": "Titulo", "description": "Descricao", "deliverable": "Entregavel"},
+      {"badge": "ETAPA 03 / 05", "title": "Titulo", "description": "Descricao", "deliverable": "Entregavel"},
+      {"badge": "ETAPA 04 / 05", "title": "Titulo", "description": "Descricao", "deliverable": "Entregavel"},
+      {"badge": "ETAPA 05 / 05", "title": "Titulo", "description": "Descricao", "deliverable": "Entregavel"}
+    ]
+  },
+  "credibility": {
+    "numbers": [
+      {"value": "50+", "label": "Clientes ativos"},
+      {"value": "R$ 2M+", "label": "Em midia gerenciada"},
+      {"value": "4.9", "label": "Avaliacao Google"},
+      {"value": "97%", "label": "Taxa de retencao"}
+    ]
+  },
+  "investment": {
+    "anchorRows": [
+      {"service": "Nome do servico", "marketPrice": "R$ X.XXX/mes"}
+    ],
+    "anchorTotal": "R$ XX.XXX/mes",
+    "planName": "NOME DO PLANO",
+    "planPrice": "R$ X.XXX",
+    "planPeriod": "/mes",
+    "savingsText": "Economia de R$ X.XXX/mes (XX%)",
+    "features": ["Feature 1 incluida", "Feature 2 incluida"],
+    "setupOriginal": "R$ X.XXX",
+    "setupDiscount": "R$ X.XXX",
+    "setupInstallments": "ou Xx de R$ XXX",
+    "scarcityText": "Texto de escassez real (capacidade limitada, vagas)"
+  },
+  "roadmap": {
+    "items": [
+      {"marker": "SEMANA 1", "title": "Titulo da etapa", "description": "O que acontece", "deliverables": ["Entrega 1", "Entrega 2"]},
+      {"marker": "SEMANA 2-3", "title": "Titulo", "description": "Descricao", "deliverables": ["Entrega"]},
+      {"marker": "SEMANA 4", "title": "Titulo", "description": "Descricao", "deliverables": ["Entrega"]},
+      {"marker": "MES 2+", "title": "Titulo", "description": "Descricao", "deliverables": ["Entrega"]}
+    ]
+  }
+}`
 }

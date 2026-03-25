@@ -6,5 +6,4 @@ export const anthropic = new Anthropic({
 
 export const MODELS = {
   analysis: "claude-sonnet-4-20250514",
-  generation: "claude-opus-4-20250514",
 } as const

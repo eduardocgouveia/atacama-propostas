@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { generateProposal } from "@/lib/ai/generate"
+import { generateProposalContent } from "@/lib/ai/generate"
 import { generateSlug } from "@/lib/utils"
 import type { AnalysisResult } from "@/lib/ai/analyze"
 
@@ -17,15 +17,20 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    console.log(`[generate-proposal] Starting for ${analysis.prospect.companyName} / Plan: ${planName}`)
+    const startTime = Date.now()
+
     const slug = generateSlug(analysis.prospect.companyName)
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
     const formActionUrl = `${appUrl}/api/contract`
 
-    const html = await generateProposal(analysis, planName, formActionUrl)
+    const { html } = await generateProposalContent(analysis, planName, formActionUrl)
 
     // Inject tracking pixel before </body>
     const trackingPixel = `<img src="${appUrl}/api/proposals/${slug}/viewed" style="position:absolute;width:1px;height:1px;opacity:0;" alt="" />`
     const finalHtml = html.replace("</body>", `${trackingPixel}\n</body>`)
+
+    console.log(`[generate-proposal] Done in ${((Date.now() - startTime) / 1000).toFixed(1)}s`)
 
     return NextResponse.json({
       html: finalHtml,
@@ -43,4 +48,4 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export const maxDuration = 120 // Allow up to 2 minutes for Opus generation
+export const maxDuration = 30 // Sonnet + template = rapido

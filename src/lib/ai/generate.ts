@@ -1,74 +1,57 @@
 import { anthropic, MODELS } from "./client"
-import { getGenerationSystemPrompt } from "./prompts"
+import { getContentPrompt } from "./prompts"
+import { renderProposal, type ProposalContent } from "../template-engine"
 import type { AnalysisResult } from "./analyze"
 
-export async function generateProposal(
+export async function generateProposalContent(
   analysis: AnalysisResult,
   planName: string,
   formActionUrl: string
-): Promise<string> {
-  const systemPrompt = getGenerationSystemPrompt(planName)
+): Promise<{ html: string; content: ProposalContent }> {
+  const systemPrompt = getContentPrompt(planName)
 
-  const userPrompt = `Gere a proposta comercial HTML completa para o seguinte prospect:
+  const userPrompt = `Gere o conteudo JSON da proposta comercial para:
 
-# DADOS DO PROSPECT
 - Empresa: ${analysis.prospect.companyName}
 - Contato: ${analysis.prospect.contactName}
 - Setor: ${analysis.prospect.sector}
-- Faturamento estimado: ${analysis.prospect.estimatedRevenue}
-- Cidade/Estado: ${analysis.prospect.city}/${analysis.prospect.state}
+- Faturamento: ${analysis.prospect.estimatedRevenue}
+- Local: ${analysis.prospect.city}/${analysis.prospect.state}
 
-# DIAGNOSTICO
-${analysis.analysis.diagnosis}
+DIAGNOSTICO: ${analysis.analysis.diagnosis}
+VERDADE INCONVENIENTE: ${analysis.analysis.inconvenientTruth}
+PLANO: ${planName} - R$ ${analysis.analysis.planPrice}/mes + Setup R$ ${analysis.analysis.setupPrice}
 
-# VERDADE INCONVENIENTE
-${analysis.analysis.inconvenientTruth}
-
-# PLANO RECOMENDADO
-${planName} - R$ ${analysis.analysis.planPrice}/mes + Setup R$ ${analysis.analysis.setupPrice}
-
-# GPCT
+GPCT:
 - Goals: ${analysis.analysis.gpct.goals}
 - Plans: ${analysis.analysis.gpct.plans}
 - Challenges: ${analysis.analysis.gpct.challenges}
 - Timeline: ${analysis.analysis.gpct.timeline}
 
-# OBJECOES MAPEADAS
-${analysis.analysis.keyObjections.map((o, i) => `${i + 1}. ${o}`).join("\n")}
+OBJECOES: ${analysis.analysis.keyObjections.join("; ")}
+GATILHOS: ${analysis.analysis.emotionalTriggers.join(", ")}
+PERSONA: ${analysis.analysis.personaMatch} (${analysis.analysis.personaAdherence}%)`
 
-# GATILHOS EMOCIONAIS
-${analysis.analysis.emotionalTriggers.join(", ")}
-
-# PERSONA MATCH
-${analysis.analysis.personaMatch} (${analysis.analysis.personaAdherence}% aderencia)
-
-Gere o HTML completo da proposta. Use {{FORM_ACTION_URL}} como placeholder para o action do formulario.`
-
-  const stream = anthropic.messages.stream({
-    model: MODELS.generation,
-    max_tokens: 16384,
+  const response = await anthropic.messages.create({
+    model: MODELS.analysis, // Sonnet - rapido e barato
+    max_tokens: 4096,
     system: systemPrompt,
-    messages: [
-      {
-        role: "user",
-        content: userPrompt,
-      },
-    ],
+    messages: [{ role: "user", content: userPrompt }],
   })
 
-  const response = await stream.finalMessage()
-
-  let html =
+  const text =
     response.content[0].type === "text" ? response.content[0].text : ""
 
-  // Clean up markdown fences if present
-  html = html
-    .replace(/```html\n?/g, "")
+  const cleaned = text
+    .replace(/```json\n?/g, "")
     .replace(/```\n?/g, "")
     .trim()
 
-  // Replace form action placeholder
+  const content = JSON.parse(cleaned) as ProposalContent
+
+  // Render template with content
+  let html = renderProposal(content)
   html = html.replace(/\{\{FORM_ACTION_URL\}\}/g, formActionUrl)
 
-  return html
+  return { html, content }
 }
