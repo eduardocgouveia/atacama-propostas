@@ -21,10 +21,11 @@ import {
 } from "lucide-react"
 import { formatCurrency } from "@/lib/utils"
 import type { AnalysisResult } from "@/lib/ai/analyze"
+import type { EditedProposalData } from "@/lib/types"
 
 interface AnalysisResultsProps {
   analysis: AnalysisResult
-  onGenerate: (planName: string) => void
+  onGenerate: (data: EditedProposalData) => void
   generating: boolean
 }
 
@@ -213,8 +214,29 @@ export function AnalysisResults({
   }
 
   function handleGenerate() {
-    const planName = selectedPlans.join(" + ")
-    onGenerate(planName)
+    const plansData = selectedPlans.map((name) => {
+      const catalog = PLANS_CATALOG.find((p) => p.name === name)
+      return catalog || { name, price: 0, setup: 0, type: "recorrente" as const, description: "", target: "" }
+    })
+
+    const editedData: EditedProposalData = {
+      companyName,
+      contactName,
+      sector,
+      location,
+      revenue,
+      goals,
+      plans,
+      timeline,
+      challenges,
+      inconvenientTruth,
+      diagnosis,
+      selectedPains: pains.filter((p) => p.selected).map((p) => p.text),
+      selectedPlans: plansData,
+      proposalType,
+    }
+
+    onGenerate(editedData)
   }
 
   const missingFields = !companyName || !contactName

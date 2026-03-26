@@ -5,6 +5,7 @@ import { TranscriptionInput } from "@/components/proposals/transcription-input"
 import { AnalysisResults } from "@/components/proposals/analysis-results"
 import { ProposalPreview } from "@/components/proposals/proposal-preview"
 import type { AnalysisResult } from "@/lib/ai/analyze"
+import type { EditedProposalData } from "@/lib/types"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
@@ -50,19 +51,18 @@ export default function NewProposalPage() {
     }
   }
 
-  async function handleGenerate(planName: string) {
-    if (!analysis) return
+  async function handleGenerate(editedData: EditedProposalData) {
     setGenerating(true)
     setError("")
 
     const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), 300000) // 5 min timeout
+    const timeout = setTimeout(() => controller.abort(), 300000)
 
     try {
       const response = await fetch("/api/generate-proposal", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ analysis, planName }),
+        body: JSON.stringify({ editedData, analysis }),
         signal: controller.signal,
       })
 
@@ -81,15 +81,21 @@ export default function NewProposalPage() {
 
       const result = await response.json()
 
-      // Save proposal HTML locally (MVP - file-based storage)
+      // Save proposal
       try {
         await fetch("/api/proposals/save", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ slug: result.slug, html: result.html }),
+          body: JSON.stringify({
+            slug: result.slug,
+            html: result.html,
+            companyName: editedData.companyName,
+            planName: result.planName,
+            planPrice: result.planPrice,
+            setupPrice: result.setupPrice,
+          }),
         })
       } catch {
-        // Save failed but we still have the proposal - continue
         console.warn("Failed to save proposal to disk")
       }
 
@@ -97,7 +103,7 @@ export default function NewProposalPage() {
       setStep("proposal")
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") {
-        setError("Timeout: a geracao demorou mais de 2 minutos. Tente novamente.")
+        setError("Timeout: a geracao demorou mais de 5 minutos. Tente novamente.")
       } else {
         setError(err instanceof Error ? err.message : "Erro desconhecido")
       }

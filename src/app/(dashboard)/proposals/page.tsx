@@ -1,21 +1,44 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Plus, FileText } from "lucide-react"
+import { Plus, FileText, ExternalLink } from "lucide-react"
+import { formatCurrency } from "@/lib/utils"
+
+interface ProposalMeta {
+  slug: string
+  companyName: string
+  planName: string
+  planPrice: number
+  setupPrice: number
+  status: string
+  createdAt: string
+}
 
 export default function ProposalsPage() {
-  // TODO: Fetch proposals from database
-  const proposals: Array<{
-    id: string
-    title: string
-    slug: string
-    planName: string
-    leadScore: number
-    temperature: string
-    status: string
-    createdAt: string
-  }> = []
+  const [proposals, setProposals] = useState<ProposalMeta[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch("/api/proposals/save")
+      .then((r) => r.json())
+      .then((data) => setProposals(data))
+      .catch(() => setProposals([]))
+      .finally(() => setLoading(false))
+  }, [])
+
+  function formatDate(iso: string) {
+    return new Date(iso).toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  }
 
   return (
     <div className="space-y-6">
@@ -23,7 +46,7 @@ export default function ProposalsPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Propostas</h1>
           <p className="text-neutral-400">
-            Gerencie todas as propostas comerciais
+            {proposals.length} proposta{proposals.length !== 1 ? "s" : ""} gerada{proposals.length !== 1 ? "s" : ""}
           </p>
         </div>
         <Link href="/proposals/new">
@@ -34,7 +57,9 @@ export default function ProposalsPage() {
         </Link>
       </div>
 
-      {proposals.length === 0 ? (
+      {loading ? (
+        <div className="text-center py-12 text-neutral-500">Carregando...</div>
+      ) : proposals.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-16">
             <FileText className="h-12 w-12 text-neutral-700" />
@@ -53,24 +78,31 @@ export default function ProposalsPage() {
       ) : (
         <div className="space-y-3">
           {proposals.map((proposal) => (
-            <Link key={proposal.id} href={`/proposals/${proposal.id}`}>
-              <Card className="transition-colors hover:border-neutral-700">
-                <CardContent className="flex items-center justify-between py-4">
-                  <div>
-                    <p className="font-medium">{proposal.title}</p>
-                    <p className="text-sm text-neutral-500">
-                      {proposal.planName} / Score: {proposal.leadScore}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Badge variant="secondary">{proposal.status}</Badge>
-                    <span className="text-xs text-neutral-600">
-                      {proposal.createdAt}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+            <Card key={proposal.slug} className="transition-colors hover:border-neutral-700">
+              <CardContent className="flex items-center justify-between py-4">
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold truncate">{proposal.companyName}</p>
+                  <p className="text-sm text-neutral-400 mt-0.5">
+                    {proposal.planName} / {formatCurrency(proposal.planPrice)}/mes
+                  </p>
+                </div>
+                <div className="flex items-center gap-3 flex-shrink-0">
+                  <Badge variant="secondary">{proposal.status}</Badge>
+                  <span className="text-xs text-neutral-600 hidden sm:inline">
+                    {formatDate(proposal.createdAt)}
+                  </span>
+                  <a
+                    href={`/p/${proposal.slug}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button variant="ghost" size="icon">
+                      <ExternalLink className="h-4 w-4" />
+                    </Button>
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       )}
