@@ -207,3 +207,95 @@ Retorne APENAS um JSON valido (sem markdown code fences) com esta estrutura:
   }
 }`
 }
+
+export function getBodyPrompt(): string {
+  const templateCSS = loadFile("prompts/TEMPLATE_CSS.css")
+  const ancoragem = loadFile("prompts/ANCORAGEM_PRECOS.md")
+  const escassez = loadFile("prompts/ELEMENTOS_ESCASSEZ.md")
+
+  return `Voce e o motor de propostas da Atacama Digital. Gere APENAS o HTML do <body> (sem <html>, <head>, <style>, <script>).
+
+O CSS e o JS ja estao incluidos separadamente. Voce deve usar EXATAMENTE as classes CSS definidas abaixo.
+
+# CLASSES CSS DISPONIVEIS (usar exatamente estas)
+
+\`\`\`css
+${templateCSS}
+\`\`\`
+
+# ESTRUTURA: 8 SECOES OBRIGATORIAS
+
+Gere o HTML seguindo esta estrutura exata:
+
+## 1. HERO (section.slide.dark.grain)
+- Radial gradient background sutil
+- div.gridlines com gl-v, gl-h, gl-dot
+- div.container centralizado:
+  - SVG logo Atacama (viewBox="0 0 1700 1240", path="M1682.36 1220 1188.62 20H951.77v.02H748.23l.01-.02H511.38L17.64 1220h247.7L737.38 46.96v1173.02h225.25V46.96L1434.66 1220Zm0 0")
+  - p.eyebrow: "PROPOSTA COMERCIAL EXCLUSIVA . MES ANO"
+  - h1.display: nome da empresa
+  - p: tagline impactante
+  - span.urgencia-badge: "VALIDA ATE [data +10 dias]"
+  - p: "Preparado para [contato] / [empresa] . [local]"
+- span.coord nos cantos
+
+## 2. VERDADE INCONVENIENTE (section.slide.dark.grain)
+- Grid 2 colunas: h2.display (headline) + div com card-glass (dores)
+- div.truth-quote: citacao provocativa
+
+## 3. SOLUCAO (section.slide.silver-bg)
+- p.eyebrow-dark + h2.display
+- Grid de card-white com anim-icon (SVGs animados)
+- div.team-badges
+
+## 4. METODO COSMOS (section.cosmos-section-v10.dark)
+- Background nebular (gradientes)
+- SVG orbital (orbitas, nodes, beams) - use cosmos-orbit-vis, cosmos-node-vis, cosmos-conn-vis, cosmos-beam-vis
+- Painel lateral cosmos-content-panel com cosmos-card (5 etapas)
+- cosmos-nav com dots e botoes
+
+## 5. CREDIBILIDADE (section.slide.dark)
+- cred-numbers-v10 grid (4 numeros: clientes, midia gerenciada, avaliacao, retencao)
+- Badges Google Partner
+- t-grid com t-card (testimonials - use cases REAIS da Atacama, nao do prospect)
+- client-pills (logos de clientes Atacama)
+
+## 6. INVESTIMENTO (section.slide.dark)
+- invest-v10: blocos de investimento
+  - Tabela ancoragem (invest-anchor-table com invest-anchor-row)
+  - Price card (invest-price-card)
+  - Feature checklist (feat-list com feat-item)
+  - Setup card com animacao strikethrough
+  - scarcity-box
+- Se MULTIPLOS PLANOS: usar sistema de tabs/abas para cada plano
+
+## 7. PROXIMOS PASSOS (section.slide.silver-bg)
+- div.roadmap com roadmap-item
+- Formulario "Quero Contratar" (action="{{FORM_ACTION_URL}}")
+
+## 8. FECHAMENTO (section.slide.dark.grain)
+- Logo Atacama SVG centralizado
+- h2.display: "Bem-vindo a Clareza."
+- Coordenadas nos cantos
+
+# ANCORAGEM DE PRECOS
+
+${ancoragem}
+
+# ELEMENTOS DE ESCASSEZ
+
+${escassez}
+
+# REGRAS
+
+1. Retorne APENAS o HTML das 8 secoes, sem <html>, <head>, <body>, <style>, <script>
+2. Use EXATAMENTE as classes CSS listadas acima
+3. Portugues brasileiro com acentuacao correta
+4. Tom: firme, lucido, provocativo. Sem corporativismo
+5. Use as palavras do prospect da transcricao
+6. Cases de credibilidade devem ser da ATACAMA (nao do prospect)
+7. Numeros de credibilidade: 50+ clientes, R$ 2M+ midia, 4.9 Google, 97% retencao
+8. Logo Atacama: SVG com o path fornecido acima
+9. Formulario com action="{{FORM_ACTION_URL}}"
+10. Validade: 10 dias a partir de ${new Date().toLocaleDateString("pt-BR")}`
+}

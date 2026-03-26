@@ -1,6 +1,6 @@
 import { getClient, MODELS } from "./client"
-import { getContentPrompt } from "./prompts"
-import { renderProposal, type ProposalContent } from "../template-engine"
+import { getBodyPrompt } from "./prompts"
+import { buildProposalHTML } from "../proposal-builder"
 import type { AnalysisResult } from "./analyze"
 import type { EditedProposalData } from "../types"
 
@@ -8,16 +8,15 @@ export async function generateProposalContent(
   editedData: EditedProposalData,
   analysis: AnalysisResult,
   formActionUrl: string
-): Promise<{ html: string; content: ProposalContent }> {
+): Promise<{ html: string }> {
   const mainPlan = editedData.selectedPlans[0]
-  const systemPrompt = getContentPrompt(mainPlan.name)
+  const systemPrompt = getBodyPrompt()
 
-  // Usar dados EDITADOS pelo usuario, nao os da analise crua
   const plansInfo = editedData.selectedPlans
-    .map((p) => `${p.name}: R$ ${p.price}/mes + Setup R$ ${p.setup} (${p.description})`)
+    .map((p) => `- ${p.name}: R$ ${p.price.toLocaleString("pt-BR")}${p.type === "one-shot" ? " (unico)" : "/mes"} + Setup R$ ${p.setup.toLocaleString("pt-BR")} | ${p.description} | Faixa: ${p.target}`)
     .join("\n")
 
-  const userPrompt = `Gere o conteudo JSON da proposta comercial para:
+  const userPrompt = `Gere o HTML do <body> da proposta comercial (SEM <html>, <head>, <style>, <script>). Use EXATAMENTE as classes CSS do template Atacama.
 
 EMPRESA: ${editedData.companyName}
 CONTATO: ${editedData.contactName}
@@ -25,7 +24,7 @@ SETOR: ${editedData.sector}
 FATURAMENTO: ${editedData.revenue}
 LOCAL: ${editedData.location}
 
-OBJETIVOS DO CLIENTE: ${editedData.goals}
+OBJETIVOS: ${editedData.goals}
 PLANOS ATUAIS: ${editedData.plans}
 URGENCIA: ${editedData.timeline}
 
@@ -36,46 +35,40 @@ DESAFIOS: ${editedData.challenges}
 DORES SELECIONADAS:
 ${editedData.selectedPains.map((p, i) => `${i + 1}. ${p}`).join("\n")}
 
-PLANO(S) SELECIONADO(S):
+PLANO(S):
 ${plansInfo}
 
-TIPO DE PROPOSTA: ${editedData.proposalType === "multiple" ? "MULTIPLOS PLANOS (apresentar opcoes)" : "PLANO UNICO"}
+TIPO: ${editedData.proposalType === "multiple" ? "MULTIPLOS PLANOS - secao investimento com ABAS para cada plano" : "PLANO UNICO"}
 
 PERSONA: ${analysis.analysis.personaMatch} (${analysis.analysis.personaAdherence}%)
-GATILHOS EMOCIONAIS: ${analysis.analysis.emotionalTriggers.join(", ")}`
+GATILHOS: ${analysis.analysis.emotionalTriggers?.join(", ") || "nao identificados"}`
 
   const response = await getClient().messages.create({
     model: MODELS.analysis,
-    max_tokens: 4096,
+    max_tokens: 12000,
     system: systemPrompt,
     messages: [{ role: "user", content: userPrompt }],
   })
 
-  const text =
+  let bodyHTML =
     response.content[0].type === "text" ? response.content[0].text : ""
 
-  const cleaned = text
-    .replace(/```json\n?/g, "")
+  // Clean markdown fences
+  bodyHTML = bodyHTML
+    .replace(/```html\n?/g, "")
     .replace(/```\n?/g, "")
     .trim()
 
-  const content = JSON.parse(cleaned) as ProposalContent
+  // Remove any <html>, <head>, <body> tags the model might add
+  bodyHTML = bodyHTML
+    .replace(/<\/?html[^>]*>/gi, "")
+    .replace(/<head>[\s\S]*?<\/head>/gi, "")
+    .replace(/<\/?body[^>]*>/gi, "")
+    .replace(/<\/?!DOCTYPE[^>]*>/gi, "")
+    .trim()
 
-  // Override com dados editados para garantir que nomes/precos estao corretos
-  if (content.hero) {
-    content.hero.companyName = editedData.companyName
-    content.hero.contactName = editedData.contactName
-    content.hero.location = editedData.location
-  }
-  if (content.investment) {
-    content.investment.planName = mainPlan.name
-    content.investment.planPrice = `R$ ${mainPlan.price.toLocaleString("pt-BR")}`
-    content.investment.planPeriod = mainPlan.type === "one-shot" ? " (unico)" : "/mes"
-  }
+  // Build final HTML with fixed CSS + generated body + fixed JS
+  const html = buildProposalHTML(editedData.companyName, bodyHTML, formActionUrl)
 
-  // Render template
-  let html = renderProposal(content)
-  html = html.replace(/\{\{FORM_ACTION_URL\}\}/g, formActionUrl)
-
-  return { html, content }
+  return { html }
 }

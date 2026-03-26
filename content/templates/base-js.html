@@ -1,0 +1,302 @@
+<script>
+// ── Scroll Reveal ──
+var reveals=document.querySelectorAll('.reveal');
+var revealObs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible')});},{threshold:0.1,rootMargin:'0px 0px -50px 0px'});
+reveals.forEach(function(el){revealObs.observe(el);});
+
+// ── Gridlines frame activation ──
+document.querySelectorAll('.gridlines').forEach(function(gl){
+  var glObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){gl.classList.add('gl-active');glObs.disconnect();}
+    });
+  },{threshold:0.1});
+  glObs.observe(gl.parentElement||gl);
+});
+
+// ── COSMOS Visual scroll-trigger (v10b) ──
+var cosmosSection=document.getElementById('cosmos');
+if(cosmosSection){
+  var cosmosObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        cosmosSection.classList.add('cosmos-active');
+        cosmosObs.disconnect();
+      }
+    });
+  },{threshold:0.05});
+  cosmosObs.observe(cosmosSection);
+}
+
+// ── Setup Price Animation ──
+var ss=document.getElementById('setup-section');
+if(ss){var so=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){setTimeout(function(){var orig=document.getElementById('setup-original');var disc=document.getElementById('setup-discount');if(orig)orig.classList.add('struck');if(disc)disc.classList.add('revealed');},1500);so.disconnect();}});},{threshold:0.3});so.observe(ss);}
+
+// ── Registration Form ──
+// ── Formspree Integration ──
+var FORMSPREE_ENDPOINT = 'https://formspree.io/f/mjgajnvl';
+
+function enviarCadastro(e){
+  e.preventDefault();
+  var f=e.target;
+  var btn=f.querySelector('button[type="submit"]');
+  var btnText=btn.textContent;
+  btn.textContent='ENVIANDO...';
+  btn.style.opacity='0.6';
+  btn.disabled=true;
+
+  var params={
+    _subject: 'FECHAMENTO DE PROPOSTA / '+f.denominacao_social.value,
+    denominacao_social: f.denominacao_social.value,
+    cnpj: f.cnpj.value,
+    cep_empresa: f.cep_empresa.value,
+    endereco_empresa: f.endereco_empresa.value,
+    complemento_empresa: f.complemento_empresa.value||'',
+    bairro_empresa: f.bairro_empresa.value,
+    cidade_empresa: f.cidade_empresa.value,
+    uf_empresa: f.uf_empresa.value,
+    email_empresa: f.email_empresa.value,
+    nome_representante: f.nome_representante.value,
+    nacionalidade: f.nacionalidade.value||'',
+    estado_civil: f.estado_civil.value||'',
+    profissao: f.profissao.value||'',
+    nascimento: f.nascimento.value||'',
+    cpf: f.cpf.value,
+    documento_id: f.documento_id.value||'',
+    orgao_expedidor: f.orgao_expedidor.value||'',
+    cep_pessoal: f.cep_pessoal.value||'',
+    endereco_pessoal: f.endereco_pessoal.value||'',
+    bairro_pessoal: f.bairro_pessoal.value||'',
+    cidade_pessoal: f.cidade_pessoal.value||'',
+    uf_pessoal: f.uf_pessoal.value||'',
+    telefone_fixo: f.telefone_fixo.value||'',
+    telefone_celular: f.telefone_celular.value,
+    email_pessoal: f.email_pessoal.value,
+    plano: f.plano.value,
+    proposta: f.proposta.value,
+    data_cadastro: new Date().toLocaleString('pt-BR')
+  };
+
+  // Build plain text version for template
+  params.message = '═══════════════════════════════════════\n'
+    +'CADASTRO PARA CONTRATAÇÃO\n'
+    +'═══════════════════════════════════════\n\n'
+    +'Link da proposta: https://propostas.atacama.digital/likeodonto1\n\n'
+    +'--- DETALHES DA NEGOCIAÇÃO ---\n'
+    +'Proposta: '+params.proposta+'\n'
+    +'Plano contratado: '+params.plano+'\n\n'
+    +'Mensalidade: R$ 7.550/mês (Plano DIAMOND com 14% desconto rede)\n'
+    +'Valor tabela: R$ 8.780/mês\n'
+    +'Desconto rede (6 unidades): 14%\n'
+    +'Economia anual: R$ 14.760\n'
+    +'Valor por unidade: R$ 1.258/mês\n\n'
+    +'Setup: R$ 2.064 (desconto especial desta proposta)\n'
+    +'Valor original setup: R$ 2.580\n'
+    +'Setup único para 6 unidades (Meta Ads 6 raios + Google Ads + LPs + GMN + Dashboard + COSMOS)\n\n'
+    +'Escopo incluso:\n'
+    +'  . Tráfego pago integrado (Google Ads + Meta Ads) com segmentação por raio\n'
+    +'  . Social media / calendário editorial unificado\n'
+    +'  . 1 diária audiovisual por mês\n'
+    +'  . Criativos de performance testados por público\n'
+    +'  . Landing pages por serviço e unidade (abertura em menos de 3s)\n'
+    +'  . Dashboard em tempo real + relatório diário WhatsApp\n'
+    +'  . Padronização GMN (6 perfis Google Meu Negócio)\n'
+    +'  . Equipe: Gestor de Tráfego + CS + Gerente de Projetos + Social Media + Editor de Vídeo + Estrategista\n'
+    +'  . Método COSMOS (Imersão + Mapeamento + Execução + Monitoramento + Escalonamento)\n'
+    +'  . Reuniões quinzenais + COSMOS Review trimestral\n\n'
+    +'--- DADOS DO CONTRATANTE ---\n'
+    +'Denominação Social: '+params.denominacao_social+'\n'
+    +'CNPJ/MF: '+params.cnpj+'\n'
+    +'CEP: '+params.cep_empresa+'\n'
+    +'Endereço: '+params.endereco_empresa+'\n'
+    +'Complemento: '+params.complemento_empresa+'\n'
+    +'Bairro: '+params.bairro_empresa+'\n'
+    +'Cidade: '+params.cidade_empresa+'\n'
+    +'UF: '+params.uf_empresa+'\n'
+    +'E-mail empresa: '+params.email_empresa+'\n\n'
+    +'--- REPRESENTANTE LEGAL ---\n'
+    +'Nome: '+params.nome_representante+'\n'
+    +'Nacionalidade: '+params.nacionalidade+'\n'
+    +'Estado Civil: '+params.estado_civil+'\n'
+    +'Profissão: '+params.profissao+'\n'
+    +'Nascimento: '+params.nascimento+'\n'
+    +'CPF/MF: '+params.cpf+'\n'
+    +'Documento ID: '+params.documento_id+'\n'
+    +'Órgão Expedidor: '+params.orgao_expedidor+'\n'
+    +'CEP pessoal: '+params.cep_pessoal+'\n'
+    +'Endereço pessoal: '+params.endereco_pessoal+'\n'
+    +'Bairro: '+params.bairro_pessoal+'\n'
+    +'Cidade: '+params.cidade_pessoal+'\n'
+    +'UF: '+params.uf_pessoal+'\n'
+    +'Telefone Fixo: '+params.telefone_fixo+'\n'
+    +'Telefone Celular: '+params.telefone_celular+'\n'
+    +'E-mail pessoal: '+params.email_pessoal+'\n\n'
+    +'Data do cadastro: '+params.data_cadastro;
+
+  // Send via Formspree
+  fetch(FORMSPREE_ENDPOINT, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+    body: JSON.stringify(params)
+  })
+  .then(function(response){
+    if(response.ok){
+      document.getElementById('formCadastro').style.display='none';
+      document.getElementById('formSucesso').style.display='block';
+    } else {
+      throw new Error('Erro no envio');
+    }
+  })
+  .catch(function(err){
+    btn.textContent=btnText;
+    btn.style.opacity='1';
+    btn.disabled=false;
+    alert('Erro ao enviar. Tente novamente ou entre em contato pelo WhatsApp.');
+    console.error('Formspree error:',err);
+  });
+}
+
+// ── CEP Auto-complete (ViaCEP) ──
+function maskCEP(input){
+  var v=input.value.replace(/\D/g,'');
+  if(v.length>5)v=v.substring(0,5)+'-'+v.substring(5,8);
+  input.value=v;
+}
+
+function buscarCEP(cepInput, bairroName, cidadeName, ufName, enderecoName){
+  var cep=cepInput.value.replace(/\D/g,'');
+  if(cep.length!==8)return;
+  cepInput.style.borderColor='rgba(225,63,7,0.4)';
+  fetch('https://viacep.com.br/ws/'+cep+'/json/')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      cepInput.style.borderColor='rgba(255,255,255,0.12)';
+      if(d.erro){cepInput.style.borderColor='rgba(225,63,7,0.6)';return;}
+      var form=cepInput.closest('form');
+      if(d.bairro && form.querySelector('[name="'+bairroName+'"]'))form.querySelector('[name="'+bairroName+'"]').value=d.bairro;
+      if(d.localidade && form.querySelector('[name="'+cidadeName+'"]'))form.querySelector('[name="'+cidadeName+'"]').value=d.localidade;
+      if(d.uf && form.querySelector('[name="'+ufName+'"]'))form.querySelector('[name="'+ufName+'"]').value=d.uf;
+      if(d.logradouro && enderecoName && form.querySelector('[name="'+enderecoName+'"]')){
+        var endField=form.querySelector('[name="'+enderecoName+'"]');
+        if(!endField.value)endField.value=d.logradouro;
+      }
+    })
+    .catch(function(){cepInput.style.borderColor='rgba(255,255,255,0.12)';});
+}
+
+// ── CNPJ Mask + Validation ──
+function maskCNPJ(input){
+  var v=input.value.replace(/\D/g,'');
+  if(v.length>14)v=v.substring(0,14);
+  if(v.length>12)v=v.substring(0,2)+'.'+v.substring(2,5)+'.'+v.substring(5,8)+'/'+v.substring(8,12)+'-'+v.substring(12);
+  else if(v.length>8)v=v.substring(0,2)+'.'+v.substring(2,5)+'.'+v.substring(5,8)+'/'+v.substring(8);
+  else if(v.length>5)v=v.substring(0,2)+'.'+v.substring(2,5)+'.'+v.substring(5);
+  else if(v.length>2)v=v.substring(0,2)+'.'+v.substring(2);
+  input.value=v;
+  validateCNPJ(input);
+}
+
+function validateCNPJ(input){
+  var cnpj=input.value.replace(/\D/g,'');
+  if(cnpj.length<14){input.style.borderColor='rgba(255,255,255,0.12)';return;}
+  if(/^(\d)\1{13}$/.test(cnpj)){input.style.borderColor='rgba(225,63,7,0.6)';return;}
+  var t=cnpj.length-2,d=cnpj.substring(t),n=cnpj.substring(0,t),s=0,p=t-7;
+  for(var i=t;i>=1;i--){s+=parseInt(n.charAt(t-i))*p--;if(p<2)p=9;}
+  var r=s%11<2?0:11-s%11;
+  if(r!=parseInt(d.charAt(0))){input.style.borderColor='rgba(225,63,7,0.6)';return;}
+  t++;n=cnpj.substring(0,t);s=0;p=t-7;
+  for(var i=t;i>=1;i--){s+=parseInt(n.charAt(t-i))*p--;if(p<2)p=9;}
+  r=s%11<2?0:11-s%11;
+  if(r!=parseInt(d.charAt(1))){input.style.borderColor='rgba(225,63,7,0.6)';return;}
+  input.style.borderColor='rgba(0,200,100,0.5)';
+  // Consulta CNPJ via BrasilAPI para auto-preencher dados da empresa
+  buscarCNPJ(cnpj);
+}
+
+function buscarCNPJ(cnpj){
+  fetch('https://brasilapi.com.br/api/cnpj/v1/'+cnpj)
+    .then(function(r){if(!r.ok)throw new Error('CNPJ nao encontrado');return r.json();})
+    .then(function(d){
+      var form=document.getElementById('formCadastro');
+      if(!form)return;
+      // Preencher Denominacao Social
+      if(d.razao_social){var ds=form.querySelector('[name="denominacao_social"]');if(ds&&!ds.value)ds.value=d.razao_social;}
+      // Preencher CEP
+      if(d.cep){
+        var cepField=form.querySelector('[name="cep_empresa"]');
+        if(cepField&&!cepField.value){
+          var cepVal=d.cep.replace(/\D/g,'');
+          if(cepVal.length===8){cepField.value=cepVal.substring(0,5)+'-'+cepVal.substring(5);buscarCEP(cepField,'bairro_empresa','cidade_empresa','uf_empresa','endereco_empresa');}
+        }
+      }
+      // Preencher Endereco
+      if(d.logradouro){var end=form.querySelector('[name="endereco_empresa"]');if(end&&!end.value)end.value=d.logradouro+(d.numero?' '+d.numero:'');}
+      if(d.complemento){var comp=form.querySelector('[name="complemento_empresa"]');if(comp&&!comp.value)comp.value=d.complemento;}
+      if(d.bairro){var bairro=form.querySelector('[name="bairro_empresa"]');if(bairro&&!bairro.value)bairro.value=d.bairro;}
+      if(d.municipio){var cidade=form.querySelector('[name="cidade_empresa"]');if(cidade&&!cidade.value)cidade.value=d.municipio;}
+      if(d.uf){var uf=form.querySelector('[name="uf_empresa"]');if(uf&&!uf.value)uf.value=d.uf;}
+    })
+    .catch(function(err){console.log('CNPJ lookup:',err.message);});
+}
+
+// ── CPF Mask + Validation ──
+function maskCPF(input){
+  var v=input.value.replace(/\D/g,'');
+  if(v.length>11)v=v.substring(0,11);
+  if(v.length>9)v=v.substring(0,3)+'.'+v.substring(3,6)+'.'+v.substring(6,9)+'-'+v.substring(9);
+  else if(v.length>6)v=v.substring(0,3)+'.'+v.substring(3,6)+'.'+v.substring(6);
+  else if(v.length>3)v=v.substring(0,3)+'.'+v.substring(3);
+  input.value=v;
+  validateCPF(input);
+}
+
+function validateCPF(input){
+  var cpf=input.value.replace(/\D/g,'');
+  if(cpf.length<11){input.style.borderColor='rgba(255,255,255,0.12)';return;}
+  if(/^(\d)\1{10}$/.test(cpf)){input.style.borderColor='rgba(225,63,7,0.6)';return;}
+  var s=0;for(var i=0;i<9;i++)s+=parseInt(cpf.charAt(i))*(10-i);
+  var r=11-s%11;if(r>9)r=0;
+  if(r!=parseInt(cpf.charAt(9))){input.style.borderColor='rgba(225,63,7,0.6)';return;}
+  s=0;for(var i=0;i<10;i++)s+=parseInt(cpf.charAt(i))*(11-i);
+  r=11-s%11;if(r>9)r=0;
+  if(r!=parseInt(cpf.charAt(10))){input.style.borderColor='rgba(225,63,7,0.6)';return;}
+  input.style.borderColor='rgba(0,200,100,0.5)';
+}
+
+// ── Phone Mask ──
+function maskPhone(input){
+  var v=input.value.replace(/\D/g,'');
+  if(v.length>11)v=v.substring(0,11);
+  if(v.length>6)v='('+v.substring(0,2)+') '+v.substring(2,v.length>10?7:6)+'-'+v.substring(v.length>10?7:6);
+  else if(v.length>2)v='('+v.substring(0,2)+') '+v.substring(2);
+  input.value=v;
+}
+
+// ── COSMOS Carousel ──
+var cosmosIdx=0,cosmosTimer;
+function goCosmos(n){
+  var cards=document.querySelectorAll('#cosmosCarousel .cosmos-card');
+  var dots=document.querySelectorAll('#cosmosDots .cosmos-dot');
+  if(!cards.length)return;
+  cards[cosmosIdx].classList.remove('active');
+  dots[cosmosIdx].classList.remove('active');
+  cosmosIdx=((n%cards.length)+cards.length)%cards.length;
+  cards[cosmosIdx].classList.add('active');
+  dots[cosmosIdx].classList.add('active');
+  // highlight corresponding planet node
+  document.querySelectorAll('.cosmos-node-vis').forEach(function(nd,i){
+    nd.style.opacity=i===cosmosIdx?'1':'0.35';
+    nd.style.transition='opacity 0.5s ease';
+  });
+  clearInterval(cosmosTimer);
+  cosmosTimer=setInterval(function(){goCosmos(cosmosIdx+1);},5000);
+}
+document.addEventListener('DOMContentLoaded',function(){
+  var prev=document.getElementById('cosmosPrev');
+  var next=document.getElementById('cosmosNext');
+  if(prev)prev.addEventListener('click',function(){goCosmos(cosmosIdx-1);});
+  if(next)next.addEventListener('click',function(){goCosmos(cosmosIdx+1);});
+  cosmosTimer=setInterval(function(){goCosmos(cosmosIdx+1);},5000);
+});
+</script>
+</body>
