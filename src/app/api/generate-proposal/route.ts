@@ -48,4 +48,4 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export const maxDuration = 30 // Sonnet + template = rapido
+export const maxDuration = 300 // 5 min max para planos grandes

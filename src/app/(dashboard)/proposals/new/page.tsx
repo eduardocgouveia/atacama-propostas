@@ -56,7 +56,7 @@ export default function NewProposalPage() {
     setError("")
 
     const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), 150000) // 2.5 min timeout
+    const timeout = setTimeout(() => controller.abort(), 300000) // 5 min timeout
 
     try {
       const response = await fetch("/api/generate-proposal", {

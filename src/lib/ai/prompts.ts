@@ -94,8 +94,17 @@ export function getContentPrompt(planName: string): string {
     "DIAMOND": "plans/07_DIAMOND.md",
   }
 
+  // Only load plan details for smaller plans (< 15KB)
+  // Large plans like DIAMOND (48KB) cause timeouts
   const planFile = planFileMap[planName.toUpperCase()] || ""
-  const planContent = planFile ? loadFile(planFile) : ""
+  let planContent = ""
+  if (planFile) {
+    const fullContent = loadFile(planFile)
+    // Truncate to first 8000 chars if too long
+    planContent = fullContent.length > 8000
+      ? fullContent.substring(0, 8000) + "\n\n[... conteudo truncado para performance ...]"
+      : fullContent
+  }
 
   return `Voce e o motor comercial da Atacama Digital. Sua funcao e gerar o CONTEUDO TEXTUAL para preencher um template HTML fixo de proposta comercial. NAO gere HTML. Retorne APENAS JSON.
 
