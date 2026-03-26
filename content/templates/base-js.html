@@ -1,8 +1,16 @@
 <script>
+(function init() {
+  if (!document.body) { setTimeout(init, 50); return; }
+document.body.classList.add('js-ready');
 // ── Scroll Reveal ──
 var reveals=document.querySelectorAll('.reveal');
-var revealObs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible')});},{threshold:0.1,rootMargin:'0px 0px -50px 0px'});
+var revealObs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible')});},{threshold:0.05,rootMargin:'0px 0px 0px 0px'});
 reveals.forEach(function(el){revealObs.observe(el);});
+// Activate hero reveals immediately
+var heroSection=document.getElementById('hero');
+if(heroSection){heroSection.querySelectorAll('.reveal').forEach(function(el){el.classList.add('visible');});}
+// Activate gridlines immediately
+document.querySelectorAll('.gridlines').forEach(function(gl){gl.classList.add('gl-active');});
 
 // ── Gridlines frame activation ──
 document.querySelectorAll('.gridlines').forEach(function(gl){
@@ -291,12 +299,10 @@ function goCosmos(n){
   clearInterval(cosmosTimer);
   cosmosTimer=setInterval(function(){goCosmos(cosmosIdx+1);},5000);
 }
-document.addEventListener('DOMContentLoaded',function(){
   var prev=document.getElementById('cosmosPrev');
   var next=document.getElementById('cosmosNext');
   if(prev)prev.addEventListener('click',function(){goCosmos(cosmosIdx-1);});
   if(next)next.addEventListener('click',function(){goCosmos(cosmosIdx+1);});
   cosmosTimer=setInterval(function(){goCosmos(cosmosIdx+1);},5000);
-});
+})(); // end init IIFE
 </script>
-</body>
