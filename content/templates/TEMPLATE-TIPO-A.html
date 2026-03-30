@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proposta Comercial · {{COMPANY_NAME}} · Atacama Digital</title>
+
+<!--
+═══════════════════════════════════════════════════════════════════════════════
+TEMPLATE TIPO-A: PROPOSTA COM PLANO ÚNICO
+═══════════════════════════════════════════════════════════════════════════════
+
+O QUE É ESTE TEMPLATE?
+Este é um template clean para propostas comerciais no modelo "Tipo A" = uma proposta
+com UM ÚNICO plano/serviço (não múltiplas opções). Ideal para quando o cliente já sabe
+exatamente o que precisa e você está apresentando a solução específica.
+
+QUANDO USAR?
+- Cliente já fez briefing detalhado
+- Você está apresentando UMA solução específica, não oferecendo opções
+- Foco em storytelling, método e confiança
+- Format: 7 slides + formulário de contratação
+
+ESTRUTURA DOS 7 SLIDES:
+1. HERO — Intro, validade, contato
+2. VERDADE INCONVENIENTE — Pain points / diagnóstico (2-4 cards)
+3. A SOLUÇÃO — Solução em detalhes (3-5 service cards)
+4. MÉTODO COSMOS — Visualização orbital genérica + método (MANTÉM SVG AS-IS)
+5. CASES + CREDIBILITY — Testemunhos, stats, badges
+6. INVESTIMENTO — 1 plano único, comparativa, preço, setup
+7. PRÓXIMOS PASSOS + CTA — Roadmap + formulário
+
+PLACEHOLDERS DISPONÍVEIS:
+
+─── HERO (SLIDE 1) ───
+{{COMPANY_NAME}}        = Nome da empresa/cliente
+{{MONTH_YEAR}}          = Mês e ano da proposta (ex: "MARÇO 2026")
+{{HERO_TAGLINE}}        = Frase de impacto/tagline
+{{EXPIRY_DATE}}         = Data de validade (ex: "28 DE MARÇO")
+{{CONTACT_NAME}}        = Nome do contato responsável
+{{LOCATION}}            = Localização/cidade
+
+─── VERDADE INCONVENIENTE (SLIDE 2) ───
+{{TRUTH_HEADLINE}}      = Título do problema (ex: "Os números não mentem")
+{{TRUTH_QUOTE}}         = Citação/frase poderosa sobre o problema
+
+─── A SOLUÇÃO (SLIDE 3) ───
+{{SOLUTION_HEADLINE}}   = Título da solução (ex: "Uma metodologia completa")
+{{SOLUTION_DESCRIPTION}}= Descrição 1-2 linhas da solução
+
+─── CARDS DE DIAGNÓSTICO (SLIDE 2) ───
+Há 3 cards exemplo. Duplique para cada diagnóstico adicional (típico: 2-4 cards).
+Substitua cada um por:
+  <título em caps> = Categoria (ex: "EFICIÊNCIA")
+  <h3> = Headline problema (ex: "Custo por lead subindo")
+  <parágrafo final> = Descrição detalhada do problema
+
+─── CARDS DE SOLUÇÃO (SLIDE 3) ───
+Há 5 cards exemplo com SVG icons. Duplique para cada serviço/componente.
+Substitua:
+  <h3> = Nome do serviço (ex: "Tráfego Pago Integrado")
+  <p> = Descrição curta do serviço
+  SVG = Manter ou substituir por icon relevante
+
+─── TEAM BADGES (SLIDE 3) ───
+Lista de badges com os papéis da equipe. Customize conforme:
+<span class="team-badge">{{ROLE_NAME}}</span>
+
+─── MÉTODO COSMOS (SLIDE 4) ───
+MANTÉM: SVG orbital visualization, animações, estrutura
+MODIFIQUE APENAS: Conteúdo textual dos cards (dados específicos do cliente)
+
+─── CREDIBILIDADE (SLIDE 5) ───
+{{TESTIMONIAL_QUOTE}}   = Citação de cliente (entre aspas)
+{{TESTIMONIAL_NAME}}    = Nome cliente
+{{TESTIMONIAL_ROLE}}    = Papel/empresa cliente
+{{STAT_NUMBER}}         = Número estatístico (ex: "450%")
+{{STAT_LABEL}}          = Descrição da métrica (ex: "crescimento em leads")
+
+─── INVESTIMENTO (SLIDE 6) ───
+{{PLAN_NAME}}           = Nome do plano (ex: "REDE 360")
+{{PLAN_BASE}}           = Valor base/tabela
+{{PLAN_ORIGINAL_PRICE}} = Preço original completo (ex: "R$ 23.700/mês")
+{{PLAN_PRICE}}          = Preço final negociado (ex: "R$ 7.550/mês")
+{{PLAN_PERIOD}}         = Período (ex: "/mês")
+{{PLAN_DISCOUNT_LABEL}} = Label desconto (ex: "Desconto rede 6 unidades")
+{{PLAN_ECONOMY}}        = Economia (ex: "R$ 16.150/mês vs mercado")
+{{PLAN_UNIT_PRICE}}     = Preço por unidade se aplicável
+
+{{SETUP_ORIGINAL}}      = Setup valor original (ex: "R$ 2.580")
+{{SETUP_PRICE}}         = Setup valor final (ex: "R$ 2.064")
+{{SETUP_DISCOUNT_LABEL}}= Label desconto setup (ex: "Desconto especial")
+{{SETUP_INSTALLMENT}}   = Parcelamento se aplicável (ex: "3x R$ 860")
+
+{{ANCHOR_TOTAL}}        = Total mercado (ex: "R$ 23.700/mês")
+{{SAVINGS_VS_MARKET}}   = Economia vs mercado (ex: "R$ 16.150/mês")
+
+─── ROADMAP (SLIDE 7) ───
+Há 4 roadmap items exemplo. Duplique para cada milestone.
+Substitua:
+  <span> = Prazo (ex: "ATÉ SEXTA")
+  <h4> = Nome fase
+  <p> = Descrição
+  <span class="deliverable"> = Entrega específica
+
+─── CTA + FORM (SLIDE 7) ───
+{{CTA_HEADLINE}}        = Headline chamada final
+{{CTA_EXPIRY}}          = Data expiração (ex: "28 de março de 2026")
+{{CTA_LINK}}            = URL se aplicável (interno do form)
+
+─── FORM ───
+O formulário coleta dados legais para contratação. Campos principais:
+- Dados empresa: razão social, CNPJ, CEP, endereço, contato
+- Dados representante legal: nome, CPF, nacionalidade, endereço
+Validações automáticas: CNPJ (BrasilAPI), CPF, CEP (ViaCEP), phone masks
+
+FORMSPREE:
+O endpoint mjgajnvl → financeiro@agenciaatacama.com.br é MANTIDO AS-IS.
+Substitua {{FORM_ACTION_URL}} pelo endpoint Formspree desejado quando necessário.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+PASSO-A-PASSO PARA PREENCHER:
+
+1. Comece pelo SLIDE 1 (HERO)
+   - {{COMPANY_NAME}}, {{MONTH_YEAR}}, {{EXPIRY_DATE}}, {{CONTACT_NAME}}, {{LOCATION}}
+   - {{HERO_TAGLINE}}: frase impactante sobre a oportunidade
+
+2. Slide 2 (VERDADE INCONVENIENTE)
+   - {{TRUTH_HEADLINE}}: o grande problema/desafio
+   - {{TRUTH_QUOTE}}: citação de stakeholder ou insight
+   - DIAGNOSIS_CARDS: customize 2-4 cards com categorias e problemas específicos
+
+3. Slide 3 (A SOLUÇÃO)
+   - {{SOLUTION_HEADLINE}}: título da solução
+   - {{SOLUTION_DESCRIPTION}}: breve descrição do escopo
+   - SOLUTION_CARDS: customize cada card com serviço/componente
+   - TEAM_BADGES: roles da equipe que vai executar
+
+4. Slide 4 (MÉTODO COSMOS)
+   - MANTÉM: SVG, animações, layout
+   - CUSTOMIZE: Textos dos cards do carrossel (cada step do método)
+
+5. Slide 5 (CREDIBILIDADE)
+   - Testimonial cards: customize quotes, nomes, roles
+   - Stats: customize números e labels
+   - Logos/badges: adicione logos de clientes ou certificações
+
+6. Slide 6 (INVESTIMENTO)
+   - {{PLAN_NAME}}, {{PLAN_PRICE}}, {{PLAN_ECONOMY}}
+   - ANCHOR_TABLE: customize linhas com serviços individuais + preços tabela
+   - {{SETUP_ORIGINAL}}, {{SETUP_PRICE}}, {{SETUP_DISCOUNT_LABEL}}
+   - Scarcity box: customize mensagem de urgência
+
+7. Slide 7 (PRÓXIMOS PASSOS + CTA)
+   - {{CTA_HEADLINE}}, {{CTA_EXPIRY}}
+   - ROADMAP: customize 3-4 fases com prazos e deliverables
+   - Form: já vem pronto, só customize hidden fields (plano, proposta) se necessário
+
+SEÇÕES OPCIONAIS:
+- Team Badges: pode remover se quiser (não quebra layout)
+- Logo Marquee: pode adicionar logos de clientes (seção comentada no final do SLIDE 5)
+- Testimonials: 3 cards padrão, customize quantidade/conteúdo
+
+CSS + JS:
+- Mantém: todos animations, reveal on scroll, gridlines, cosmos orbital
+- Mantém: form validation (CNPJ, CPF, CEP), masks, Formspree integration
+- Modifique apenas: se precisar de cores custom (CSS vars em :root)
+
+IMAGENS / MÍDIA:
+- SVGs orbitais: MANTÉM as-is (genéricos, funcionam para qualquer proposta)
+- Fotos de clientes (testimonials): substitua src das imagens
+- Base64 images: REMOVIDAS - use URLs ou file paths
+
+FORMSPREE ENDPOINT:
+Padrão: mjgajnvl (financeiro@agenciaatacama.com.br)
+Sempre verifica {{FORM_ACTION_URL}} no script de form - substitua se necessário.
+
+═══════════════════════════════════════════════════════════════════════════════
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800&family=Cormorant+Unicase:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#000;--white:#FFF;--gray-90:#1A1A1A;--gray-80:#222;--gray-70:#3A3A3A;
+  --gray-60:#6B6B6B;--gray-50:#959595;--gray-30:#C4C4C4;--gray-10:#EEE;
+  --silver:#DBDCDD;--orange:#E13F07;--border:rgba(255,255,255,0.16);
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:'Inter Tight',sans-serif;background:#000;color:#fff;line-height:1.5;overflow-x:hidden}
+
+.slide{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:80px 0}
+.container{max-width:1280px;margin:0 auto;padding:0 48px;width:100%;position:relative;z-index:10}
+.photo-bg{position:absolute;inset:0;z-index:0}
+.photo-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.35;transition:transform 0.1s linear}
+.photo-bg .overlay{position:absolute;inset:0;background:linear-gradient(to top,#000 0%,rgba(0,0,0,0.3) 40%,rgba(0,0,0,0.5) 100%)}
+
+.dark{background:#000;color:#fff}
+.dark-alt{background:var(--gray-90);color:#fff}
+.silver-bg{background:var(--silver);color:#000}
+
+.display{font-family:'Cormorant Unicase',Georgia,serif;font-weight:600;letter-spacing:-0.025em;line-height:0.9}
+.eyebrow{font-size:11px;font-weight:400;text-transform:uppercase;letter-spacing:0.25em;color:var(--gray-50)}
+.eyebrow-dark{color:var(--gray-60)}
+
+.grain::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");opacity:0.08;pointer-events:none;mix-blend-mode:overlay;z-index:2}
+
+.shimmer-btn{position:relative;z-index:0;display:inline-flex;align-items:center;justify-content:center;overflow:hidden;padding:16px 36px;font-family:'Inter Tight',sans-serif;font-size:15px;font-weight:600;color:#000;background:#fff;border:1px solid rgba(0,0,0,0.10);border-radius:6px;cursor:pointer;text-decoration:none;transition:all 0.3s ease}
+.shimmer-btn:hover{transform:scale(1.04);box-shadow:0 0 28px rgba(255,255,255,0.45)}
+.shimmer-btn::before{content:'';position:absolute;inset:0;z-index:-1;background:conic-gradient(from 270deg,transparent 0deg,#000 90deg,transparent 90deg);animation:shimmer-spin 6s linear infinite;filter:blur(2px)}
+.shimmer-btn::after{content:'';position:absolute;inset:0.05em;z-index:-1;background:#fff;border-radius:6px}
+@keyframes shimmer-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+.card-glass{background:rgba(255,255,255,0.04);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:32px;transition:border-color 0.3s}
+.card-glass:hover{border-color:rgba(255,255,255,0.25)}
+.card-white{background:#fff;color:#000;border-radius:16px;padding:28px;transition:all 0.25s ease;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.card-white:hover{transform:translateY(-4px);box-shadow:0 12px 24px -4px rgba(0,0,0,0.12)}
+
+.urgencia-badge{display:inline-block;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:6px 14px;border-radius:9999px;background:rgba(225,63,7,0.12);border:1px solid rgba(225,63,7,0.2);color:rgba(255,255,255,0.8);animation:pulse 3s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.65}}
+
+.price-box{background:#fff;color:#000;padding:32px 48px;border-radius:12px;display:inline-block}
+.price-amount{font-size:clamp(2rem,5vw,48px);font-weight:800}
+.economia-pill{display:inline-block;background:rgba(225,63,7,0.1);border:1px solid rgba(225,63,7,0.15);color:rgba(255,255,255,0.85);padding:8px 20px;border-radius:9999px;font-size:14px;font-weight:600}
+
+.grid{display:grid;gap:24px}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-5{grid-template-columns:repeat(5,1fr)}
+
+.coord{position:absolute;bottom:24px;font-size:10px;font-weight:400;letter-spacing:0.05em;opacity:0.5;z-index:10}
+.coord-left{left:48px}
+.coord-right{right:48px}
+
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:14px 16px;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gray-50);border-bottom:1px solid var(--border)}
+td{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:15px;color:var(--gray-30)}
+
+/* SCROLL */
+.reveal{opacity:1;transform:translateY(0);transition:opacity 0.8s ease,transform 0.8s ease}
+.js-ready .reveal{opacity:0;transform:translateY(24px)}
+.js-ready .reveal.visible{opacity:1;transform:translateY(0)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:0.1s}
+.reveal-delay-2{transition-delay:0.2s}
+.reveal-delay-3{transition-delay:0.3s}
+.reveal-delay-4{transition-delay:0.4s}
+.reveal-delay-5{transition-delay:0.5s}
+
+/* ANIMATED ICONS */
+.anim-icon{display:flex;justify-content:center;margin-bottom:16px}
+.anim-icon svg{width:44px;height:44px}
+.anim-icon .state-a,.anim-icon .state-b{transition:opacity 0.35s ease}
+.visible .anim-icon .state-a{animation:icon-a 4s ease-in-out infinite}
+.visible .anim-icon .state-b{animation:icon-b 4s ease-in-out infinite}
+@keyframes icon-a{0%,42%{opacity:1}48%,92%{opacity:0}98%,100%{opacity:1}}
+@keyframes icon-b{0%,42%{opacity:0}48%,92%{opacity:1}98%,100%{opacity:0}}
+@keyframes heart-beat{0%,40%{transform:scale(1)}45%{transform:scale(1.2)}55%{transform:scale(1)}100%{transform:scale(1)}}
+.visible .icon-heart{animation:heart-beat 3s ease-in-out infinite;transform-origin:center}
+
+/* TEAM BADGES */
+.team-badges{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:40px}
+.team-badge{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:9999px;background:rgba(0,0,0,0.06);border:1px solid rgba(0,0,0,0.10);font-size:12px;font-weight:500;color:var(--gray-70)}
+
+/* TESTIMONIAL CARDS */
+.t-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.t-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:32px;display:flex;flex-direction:column;transition:border-color 0.3s ease}
+.t-card:hover{border-color:rgba(255,255,255,0.2)}
+.t-card-quote{font-size:15px;line-height:1.7;color:rgba(255,255,255,0.7);font-style:italic;flex:1;margin-bottom:24px}
+.t-card-quote strong{color:#fff;font-style:normal;font-weight:600}
+.t-card-footer{display:flex;align-items:center;gap:14px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.06)}
+.t-card-photo{width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid rgba(255,255,255,0.1)}
+.t-card-name{font-size:14px;font-weight:600;color:#fff}
+.t-card-role{font-size:12px;color:var(--gray-50);margin-top:2px}
+@media(max-width:768px){.t-grid{grid-template-columns:1fr}}
+
+/* CREDIBILITY STATS */
+.cred-stats{display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-top:48px;padding:40px 0;border-top:1px solid rgba(255,255,255,0.08);border-bottom:1px solid rgba(255,255,255,0.08)}
+.cred-stat{text-align:center}
+.cred-stat .num{font-size:clamp(2rem,5vw,3rem);font-weight:800;letter-spacing:-0.02em}
+.cred-stat .label{font-size:12px;color:var(--gray-50);margin-top:4px;text-transform:uppercase;letter-spacing:0.1em}
+
+/* ROADMAP */
+.roadmap{position:relative;padding-left:140px;max-width:800px}
+.roadmap::before{content:'';position:absolute;left:120px;top:8px;bottom:8px;width:2px;background:linear-gradient(to bottom,rgba(255,255,255,0.3),rgba(225,63,7,0.4),rgba(255,255,255,0.1));border-radius:2px}
+.roadmap-item{position:relative;margin-bottom:56px}
+.roadmap-item:last-child{margin-bottom:0}
+.roadmap-marker{position:absolute;left:-140px;top:0;width:110px;text-align:right}
+.roadmap-marker span{font-size:11px;font-weight:700;letter-spacing:0.12em;color:var(--gray-50);text-transform:uppercase}
+.roadmap-dot{position:absolute;left:-24px;top:6px;width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 0 16px rgba(255,255,255,0.4)}
+.roadmap-content h4{font-size:20px;font-weight:700;margin-bottom:8px}
+.roadmap-content p{font-size:15px;color:var(--gray-30);line-height:1.6}
+.roadmap-content .deliverables{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.roadmap-content .deliverable{font-size:11px;padding:5px 12px;border-radius:9999px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--gray-30)}
+
+/* DELIVERY GRID */
+.delivery-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px}
+.delivery-item{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px 24px}
+.delivery-item h5{font-size:14px;font-weight:700;margin-bottom:6px;color:#fff}
+.delivery-item p{font-size:13px;color:var(--gray-30);line-height:1.5}
+.delivery-item .tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:4px;background:rgba(255,255,255,0.06);color:var(--gray-50);margin-bottom:8px}
+
+/* ANCHOR */
+.invest-anchor-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:14px;color:var(--gray-30)}
+.invest-anchor-row span:last-child{color:var(--gray-50);font-weight:500}
+
+/* TRUTH QUOTE */
+.truth-quote{border-left:3px solid rgba(225,63,7,0.25);padding:20px 24px;margin-top:32px;background:rgba(225,63,7,0.04);border-radius:0 8px 8px 0}
+.truth-quote p{font-size:15px;color:rgba(255,255,255,0.7);line-height:1.6;font-style:italic}
+
+/* COSMOS ORBITAL v10 */
+@keyframes cosmos-draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes cosmos-fade{from{opacity:0}to{opacity:1}}
+
+.cosmos-orbit{opacity:0;stroke-dashoffset:1}
+.cosmos-orbit-1{animation:cosmos-fade .4s .2s both;stroke-dashoffset:1;animation:cosmos-draw 1.4s cubic-bezier(.22,1,.36,1) .2s both,cosmos-fade .4s .2s both}
+.cosmos-orbit-2{animation:cosmos-draw 1.4s cubic-bezier(.22,1,.36,1) .35s both,cosmos-fade .4s .35s both}
+.cosmos-orbit-3{animation:cosmos-draw 1.4s cubic-bezier(.22,1,.36,1) .5s both,cosmos-fade .4s .5s both}
+.cosmos-orbit-4{animation:cosmos-draw 1.4s cubic-bezier(.22,1,.36,1) .65s both,cosmos-fade .4s .65s both}
+.cosmos-orbit-5{animation:cosmos-draw 1.4s cubic-bezier(.22,1,.36,1) .8s both,cosmos-fade .4s .8s both}
+
+.cosmos-conn{stroke-dashoffset:1;animation:cosmos-draw 1.2s cubic-bezier(.22,1,.36,1) 1s both,cosmos-fade .3s 1s both}
+.cosmos-beam{opacity:0;animation:cosmos-fade .3s 2.4s both}
+
+.cosmos-node{opacity:0}
+.cosmos-node-1{animation:cosmos-fade .4s 1.2s both}
+.cosmos-node-2{animation:cosmos-fade .4s 1.32s both}
+.cosmos-node-3{animation:cosmos-fade .4s 1.44s both}
+.cosmos-node-4{animation:cosmos-fade .4s 1.56s both}
+.cosmos-node-5{animation:cosmos-fade .4s 1.68s both}
+
+.cosmos-logo-group{opacity:0;animation:cosmos-fade .6s .1s both}
+
+/* COSMOS CAROUSEL */
+.cosmos-card{display:none}
+.cosmos-card.active{display:block;animation:cosmos-card-in .45s cubic-bezier(.22,1,.36,1) both}
+@keyframes cosmos-card-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.cosmos-badge{display:block;font-size:10px;font-weight:700;letter-spacing:.2em;color:rgba(255,255,255,.35);text-transform:uppercase;margin-bottom:10px}
+.cosmos-card-h{font-size:clamp(1.1rem,2vw,1.38rem);font-weight:700;color:#fff;margin-bottom:10px;line-height:1.2}
+.cosmos-card-p{font-size:14px;color:rgba(255,255,255,.6);line-height:1.65}
+.cosmos-deliverable{margin-top:14px;padding:12px 16px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid rgba(255,255,255,.07);font-size:12px;color:var(--gray-50)}
+.cosmos-nav{display:flex;align-items:center;gap:12px;margin-top:24px}
+.cosmos-dots-row{display:flex;gap:7px}
+.cosmos-dot{width:22px;height:3px;border-radius:2px;background:rgba(255,255,255,.2);cursor:pointer;transition:all .3s;border:none;padding:0}
+.cosmos-dot.active{background:rgba(255,255,255,.9);width:42px}
+.cosmos-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.cosmos-btn:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.28)}
+
+/* GRIDLINES */
+.gridlines{position:absolute;inset:0;z-index:1;pointer-events:none}
+.gl-v{position:absolute;top:0;bottom:0;width:1px;background:currentColor;opacity:0.18;transform:scaleY(0);transform-origin:top;transition:transform 0.7s ease-out}
+.gl-h{position:absolute;left:0;right:0;height:1px;background:currentColor;opacity:0.18;transform:scaleX(0);transform-origin:left;transition:transform 0.7s ease-out 0.2s}
+.gl-dot{position:absolute;width:7px;height:7px;border-radius:50%;background:currentColor;opacity:0;transition:opacity 0.3s ease 0.5s}
+.gridlines.gl-active .gl-v{transform:scaleY(1)}
+.gridlines.gl-active .gl-h{transform:scaleX(1)}
+.gridlines.gl-active .gl-dot{opacity:0.25}
+
+/* COSMOS SECTION */
+.cosmos-section-v10{position:relative;min-height:100vh;display:flex;align-items:stretch;overflow:hidden;padding:0}
+.cosmos-svg-wrap{position:relative;flex:1;min-height:100vh;display:flex;align-items:center}
+.cosmos-svg-wrap svg{width:100%;height:100%;position:absolute;inset:0}
+.cosmos-content-panel{position:absolute;bottom:60px;right:0;width:400px;display:flex;flex-direction:column;justify-content:flex-end;padding:0 48px 0 0;z-index:20}
+.cosmos-section-label{position:absolute;top:48px;left:48px;z-index:20}
+
+/* COSMOS ORBIT ANIMATIONS */
+.cosmos-orbit-vis{stroke-dashoffset:1}
+.cosmos-node-vis{opacity:0}
+.cosmos-conn-vis{stroke-dashoffset:1}
+.cosmos-beam-vis{opacity:0}
+
+.cosmos-active .cosmos-orbit-vis{stroke-dashoffset:0;opacity:1;transition:stroke-dashoffset 1.6s cubic-bezier(.22,1,.36,1),opacity .5s ease}
+.cosmos-active .cosmos-orbit-vis:nth-child(1){transition-delay:.2s}
+.cosmos-active .cosmos-orbit-vis:nth-child(2){transition-delay:.35s}
+.cosmos-active .cosmos-orbit-vis:nth-child(3){transition-delay:.5s}
+.cosmos-active .cosmos-orbit-vis:nth-child(4){transition-delay:.65s}
+.cosmos-active .cosmos-orbit-vis:nth-child(5){transition-delay:.8s}
+.cosmos-active .cosmos-conn-vis{stroke-dashoffset:0;opacity:1;transition:stroke-dashoffset 1.2s cubic-bezier(.22,1,.36,1) 1s,opacity .3s ease 1s}
+.cosmos-active .cosmos-node-vis{opacity:1;transition:opacity .5s ease}
+.cosmos-active .cosmos-node-vis[data-node="0"]{transition-delay:1.2s}
+.cosmos-active .cosmos-node-vis[data-node="1"]{transition-delay:1.35s}
+.cosmos-active .cosmos-node-vis[data-node="2"]{transition-delay:1.5s}
+.cosmos-active .cosmos-node-vis[data-node="3"]{transition-delay:1.65s}
+.cosmos-active .cosmos-node-vis[data-node="4"]{transition-delay:1.8s}
+.cosmos-active .cosmos-beam-vis{opacity:1;transition:opacity .5s ease 2.2s}
+
+/* CREDIBILITY */
+.cred-numbers-v10{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:56px 0 0}
+.cred-num-item-v10{text-align:center;padding:40px 24px}
+.cred-num-item-v10+.cred-num-item-v10{border-left:1px solid rgba(255,255,255,.1)}
+.cred-num-value-v10{font-size:clamp(3rem,8vw,5.5rem);font-weight:800;letter-spacing:-.03em;line-height:1;color:#fff}
+.cred-num-label-v10{font-size:13px;color:var(--gray-50);margin-top:10px;letter-spacing:.02em}
+
+/* INVESTMENT */
+.invest-block{margin-bottom:64px;position:relative}
+.invest-block:last-child{margin-bottom:0}
+.invest-block-header{display:flex;align-items:baseline;gap:16px;margin-bottom:20px}
+.invest-block-num{font-size:11px;font-weight:700;letter-spacing:.2em;color:var(--gray-50);text-transform:uppercase}
+.invest-block-title{font-size:20px;font-weight:700;color:#fff}
+.invest-separator{height:1px;background:linear-gradient(90deg,rgba(255,255,255,.08),transparent);margin:64px 0}
+
+.invest-anchor-table{width:100%;max-width:560px}
+.invest-anchor-total{display:flex;justify-content:space-between;padding:14px 0;border-top:2px solid rgba(255,255,255,.12);margin-top:4px;font-size:18px;font-weight:700;color:var(--gray-30)}
+.invest-anchor-total span:last-child{text-decoration:line-through;opacity:.6}
+
+.invest-price-card{text-align:center;padding:56px 48px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:20px;max-width:560px;margin:0 auto}
+.invest-price-label{font-size:11px;font-weight:700;letter-spacing:.2em;color:var(--gray-50);text-transform:uppercase;margin-bottom:16px}
+.invest-price-value{font-size:clamp(3rem,8vw,4.5rem);font-weight:800;letter-spacing:-.03em;line-height:1}
+.invest-price-period{font-size:18px;font-weight:400;color:var(--gray-50)}
+.invest-savings{display:inline-block;margin-top:16px;font-size:13px;color:var(--gray-50);padding:8px 20px;border-radius:9999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+
+.invest-setup-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:40px;max-width:560px;margin:0}
+.invest-setup-original{font-size:clamp(2rem,5vw,3rem);font-weight:800;color:var(--gray-30);position:relative;display:inline-block;transition:opacity 0.5s ease}
+.invest-setup-original.struck{opacity:0.25}
+.invest-setup-original.struck::after{content:'';position:absolute;left:-4px;top:50%;height:3px;background:rgba(225,63,7,0.6);border-radius:2px;animation:strike-line 0.5s ease forwards}
+@keyframes strike-line{from{width:0}to{width:calc(100% + 8px)}}
+.invest-setup-new{opacity:0;transform:translateY(16px);transition:all 0.6s cubic-bezier(.22,1,.36,1) 0.3s}
+.invest-setup-new.revealed{opacity:1;transform:translateY(0)}
+.invest-setup-value{font-size:clamp(2.5rem,6vw,3.5rem);font-weight:800;color:#fff}
+.invest-setup-discount{font-size:13px;color:var(--orange);font-weight:600;margin-top:4px}
+
+.scarcity-box{background:rgba(225,63,7,0.06);border-left:3px solid rgba(225,63,7,0.3);padding:20px 24px;border-radius:0 8px 8px 0}
+
+/* RDOT */
+.rdot-now{background:var(--orange);box-shadow:0 0 12px rgba(225,63,7,.5);animation:rdot-pulse 2.5s ease-in-out infinite}
+.rdot-next{background:rgba(255,255,255,.2);box-shadow:none}
+@keyframes rdot-pulse{0%,100%{box-shadow:0 0 12px rgba(225,63,7,.5)}50%{box-shadow:0 0 22px rgba(225,63,7,.8)}}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .grid-2,.grid-3,.grid-5{grid-template-columns:1fr}
+  .slide{padding:64px 0}
+  .container{padding:0 24px}
+  .hide-mobile{display:none}
+  .roadmap{padding-left:48px}
+  .roadmap::before{left:16px}
+  .roadmap-marker{left:-48px;width:40px}
+  .roadmap-marker span{font-size:9px}
+  .delivery-grid{grid-template-columns:1fr}
+  .cred-numbers-v10{grid-template-columns:1fr}
+  .cred-num-item-v10+.cred-num-item-v10{border-left:none;border-top:1px solid rgba(255,255,255,.1)}
+  .cred-stats{gap:24px}
+  .cosmos-content-panel{position:relative!important;bottom:auto!important;right:auto!important;width:100%!important;padding:24px!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ SLIDE 1: HERO ═══ -->
+<section class="slide dark grain" id="hero">
+  <div style="position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 80%,rgba(225,63,7,0.06) 0%,transparent 60%),radial-gradient(ellipse at 20% 20%,rgba(255,255,255,0.02) 0%,transparent 50%),#000;"></div>
+  <div class="gridlines" style="color:#fff;">
+    <div class="gl-v" style="left:max(0.75rem,calc((100% - 80rem)/2))"></div>
+    <div class="gl-v" style="right:max(0.75rem,calc((100% - 80rem)/2))"></div>
+    <div class="gl-h" style="top:48px"></div>
+    <div class="gl-h" style="bottom:48px"></div>
+    <div class="gl-dot" style="left:calc(max(0.75rem,calc((100% - 80rem)/2)) - 3px);top:45px"></div>
+    <div class="gl-dot" style="right:calc(max(0.75rem,calc((100% - 80rem)/2)) - 3px);top:45px"></div>
+    <div class="gl-dot" style="left:calc(max(0.75rem,calc((100% - 80rem)/2)) - 3px);bottom:45px"></div>
+    <div class="gl-dot" style="right:calc(max(0.75rem,calc((100% - 80rem)/2)) - 3px);bottom:45px"></div>
+  </div>
+  <div class="container" style="text-align:center;">
+    <div class="reveal">
+      <svg viewBox="0 0 1700 1240" fill="white" style="width:56px;height:auto;opacity:0.35;"><path d="M1682.36 1220 1188.62 20H951.77v.02H748.23l.01-.02H511.38L17.64 1220h247.7L737.38 46.96v1173.02h225.25V46.96L1434.66 1220Zm0 0"/></svg>
+    </div>
+    <p class="eyebrow reveal reveal-delay-1" style="margin-top:16px;">PROPOSTA COMERCIAL EXCLUSIVA . {{MONTH_YEAR}}</p>
+    <h1 class="display reveal reveal-delay-2" style="font-size:clamp(3.5rem,9vw,6rem);margin-top:16px;">{{COMPANY_NAME}}</h1>
+    <p class="reveal reveal-delay-3" style="font-size:clamp(1.1rem,2.5vw,1.4rem);color:var(--gray-30);margin-top:16px;max-width:720px;margin-left:auto;margin-right:auto;">{{HERO_TAGLINE}}</p>
+    <div class="reveal reveal-delay-4" style="margin-top:48px;">
+      <span class="urgencia-badge">VÁLIDA ATÉ {{EXPIRY_DATE}}</span>
+    </div>
+    <p class="reveal reveal-delay-5" style="font-size:12px;color:var(--gray-50);margin-top:24px;">Preparado para {{CONTACT_NAME}} / {{COMPANY_NAME}} . {{LOCATION}}</p>
+  </div>
+  <span class="coord coord-left">8°02'36.6" S</span>
+  <span class="coord coord-right">34°53'53.5" W</span>
+</section>
+
+<!-- ═══ SLIDE 2: VERDADE INCONVENIENTE ═══ -->
+<section class="slide dark grain" id="problema">
+  <div style="position:absolute;inset:0;z-index:0;background:linear-gradient(135deg,rgba(0,0,0,0.95) 0%,rgba(26,26,26,0.9) 50%,rgba(0,0,0,0.95) 100%);"></div>
+  <div class="gridlines" style="color:#fff;">
+    <div class="gl-v" style="left:max(0.75rem,calc((100% - 80rem)/2))"></div>
+    <div class="gl-v" style="right:max(0.75rem,calc((100% - 80rem)/2))"></div>
+    <div class="gl-h" style="top:48px"></div>
+    <div class="gl-h" style="bottom:48px"></div>
+    <div class="gl-dot" style="left:calc(max(0.75rem,calc((100% - 80rem)/2)) - 3px);top:45px"></div>
+    <div class="gl-dot" style="right:calc(max(0.75rem,calc((100% - 80rem)/2)) - 3px);top:45px"></div>
+    <div class="gl-dot" style="left:calc(max(0.75rem,calc((100% - 80rem)/2)) - 3px);bottom:45px"></div>
+    <div class="gl-dot" style="right:calc(max(0.75rem,calc((100% - 80rem)/2)) - 3px);bottom:45px"></div>
+  </div>
+  <div class="container">
+    <p class="eyebrow reveal" style="margin-bottom:32px;">01 / VERDADE INCONVENIENTE</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;">
+      <div>
+        <h2 class="display reveal" style="font-size:clamp(1.8rem,4vw,2.8rem);">{{TRUTH_HEADLINE}}</h2>
+        <div class="truth-quote reveal reveal-delay-1">
+          <p>"{{TRUTH_QUOTE}}"</p>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:24px;">
+<!-- INSTRUÇÃO: Customize cada card abaixo com categoria e problema específico.
+     Duplique este bloco para cada item diagnóstico (típico: 2-4 cards).
+     Mude: título em caps (CATEGORIA), headline problema, parágrafo descrição. -->
+        <div class="card-glass reveal reveal-delay-1">
+          <p class="eyebrow" style="margin-bottom:8px;">CATEGORIA</p>
+          <p style="font-size:28px;font-weight:800;">Título do problema específico</p>
+          <p style="font-size:14px;color:var(--gray-50);margin-top:8px;">Descrição detalhada do problema: contexto, números, impacto. Explique por que isso importa para o cliente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SLIDE 3: A SOLUCAO ═══ -->
+<section class="slide silver-bg" id="solucao">
+  <div class="gridlines" style="color:#000;">
+    <div class="gl-v" style="left:max(0.75rem,calc((100% - 80rem)/2))"></div>
+    <div class="gl-v" style="right:max(0.75rem,calc((100% - 80rem)/2))"></div>
+    <div class="gl-h" style="top:48px"></div>
+    <div class="gl-h" style="bottom:48px"></div>
+    <div class="gl-dot" style="left:calc(max(0.75rem,calc((100% - 80rem)/2)) - 3px);top:45px"></div>
+    <div class="gl-dot" style="right:calc(max(0.75rem,calc((100% - 80rem)/2)) - 3px);top:45px"></div>
+    <div class="gl-dot" style="left:calc(max(0.75rem,calc((100% - 80rem)/2)) - 3px);bottom:45px"></div>
+    <div class="gl-dot" style="right:calc(max(0.75rem,calc((100% - 80rem)/2)) - 3px);bottom:45px"></div>
+  </div>
+  <div class="container">
+    <p class="eyebrow eyebrow-dark reveal" style="margin-bottom:24px;">02 / A SOLUÇÃO</p>
+    <h2 class="display reveal reveal-delay-1" style="font-size:clamp(2.5rem,6vw,4rem);color:#000;">{{SOLUTION_HEADLINE}}</h2>
+    <p class="reveal reveal-delay-2" style="font-size:16px;color:var(--gray-60);margin-top:16px;max-width:740px;">{{SOLUTION_DESCRIPTION}}</p>
+
+    <div class="grid grid-5 reveal reveal-delay-3" style="margin-top:48px;">
+<!-- INSTRUÇÃO: Customize cada card com nome e descrição do serviço.
+     Duplique para cada componente da solução (típico: 3-5 cards).
+     Substitua <h3> e <p> com dados reais. SVG pode manter ou trocar por icon relevante. -->
+      <div class="card-white" style="text-align:center;">
+        <div class="anim-icon">
+          <svg viewBox="0 0 48 48" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <g class="state-a"><circle cx="24" cy="24" r="18" stroke-dasharray="4 4" opacity="0.3"/><circle cx="24" cy="24" r="11" stroke-dasharray="3 3" opacity="0.5"/><circle cx="24" cy="24" r="4"/></g>
+            <g class="state-b"><circle cx="24" cy="24" r="18" opacity="0.3"/><circle cx="24" cy="24" r="11" opacity="0.5"/><circle cx="24" cy="24" r="4"/><line x1="24" y1="2" x2="24" y2="10" opacity="0.4"/><line x1="38" y1="24" x2="46" y2="24" opacity="0.4"/></g>
+          </svg>
+        </div>
+        <h3 style="font-size:15px;font-weight:700;color:#000;">Nome do Serviço 1</h3>
+        <p style="font-size:12px;color:var(--gray-60);margin-top:8px;line-height:1.5;">Descrição breve do serviço ou componente da solução.</p>
+      </div>
+    </div>
+
+    <div class="team-badges reveal reveal-delay-4">
+<!-- INSTRUÇÃO: Customize badges com roles da equipe que executará o projeto.
+     Duplique <span> para cada role (típico: 6-8 badges). -->
+      <span class="team-badge">{{ROLE_NAME_1}}</span>
+      <span class="team-badge">{{ROLE_NAME_2}}</span>
+      <span class="team-badge">{{ROLE_NAME_3}}</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SLIDE 4: METODO COSMOS (v10 — genérico, mantém SVG) ═══ -->
+<section class="cosmos-section-v10 dark" id="cosmos" style="min-height:100vh;position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:0;background:
+    radial-gradient(ellipse at -15% 60%,rgba(160,28,38,0.8) 0%,rgba(120,18,25,0.4) 20%,rgba(80,10,15,0.12) 40%,transparent 60%),
+    radial-gradient(ellipse at 48% 10%,rgba(50,110,210,0.8) 0%,rgba(30,75,175,0.4) 25%,rgba(15,45,120,0.12) 50%,transparent 70%),
+    radial-gradient(ellipse at 82% 35%,rgba(35,75,170,0.35) 0%,rgba(20,50,120,0.1) 40%,transparent 60%),
+    #000;z-index:0;"></div>
+  <div class="cosmos-svg-wrap">
+    <svg viewBox="0 0 1280 720" style="width:100%;height:100%;" preserveAspectRatio="xMidYMid slice">
+      <defs><linearGradient id="cosmos-glow-1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:rgba(255,200,100,0.8)"/><stop offset="100%" style="stop-color:rgba(255,100,50,0.2)"/></linearGradient></defs>
+      <!-- Orbits -->
+      <circle cx="640" cy="360" r="80" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1" class="cosmos-orbit-vis"/>
+      <circle cx="640" cy="360" r="150" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1" class="cosmos-orbit-vis"/>
+      <circle cx="640" cy="360" r="220" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1" class="cosmos-orbit-vis"/>
+      <circle cx="640" cy="360" r="290" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1" class="cosmos-orbit-vis"/>
+      <circle cx="640" cy="360" r="360" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1" class="cosmos-orbit-vis"/>
+      <!-- Center node -->
+      <circle cx="640" cy="360" r="12" fill="rgba(225,63,7,0.8)" class="cosmos-node-vis" data-node="0"/>
+      <!-- Satellite nodes -->
+      <circle cx="740" cy="280" r="8" fill="rgba(255,200,100,0.6)" class="cosmos-node-vis" data-node="1"/>
+      <circle cx="800" cy="360" r="8" fill="rgba(255,180,80,0.6)" class="cosmos-node-vis" data-node="2"/>
+      <circle cx="720" cy="480" r="8" fill="rgba(255,160,60,0.6)" class="cosmos-node-vis" data-node="3"/>
+      <circle cx="560" cy="440" r="8" fill="rgba(255,140,40,0.6)" class="cosmos-node-vis" data-node="4"/>
+      <!-- Connections -->
+      <line x1="640" y1="360" x2="740" y2="280" stroke="rgba(225,63,7,0.3)" stroke-width="1" class="cosmos-conn-vis"/>
+      <line x1="640" y1="360" x2="800" y2="360" stroke="rgba(225,63,7,0.3)" stroke-width="1" class="cosmos-conn-vis"/>
+      <line x1="640" y1="360" x2="720" y2="480" stroke="rgba(225,63,7,0.3)" stroke-width="1" class="cosmos-conn-vis"/>
+      <line x1="640" y1="360" x2="560" y2="440" stroke="rgba(225,63,7,0.3)" stroke-width="1" class="cosmos-conn-vis"/>
+      <!-- Beam -->
+      <circle cx="640" cy="360" r="380" fill="none" stroke="rgba(225,63,7,0.15)" stroke-width="2" class="cosmos-beam-vis"/>
+    </svg>
+  </div>
+  <div class="cosmos-content-panel">
+    <p class="eyebrow" style="margin-bottom:16px;">03 / MÉTODO COSMOS</p>
+    <div id="cosmosCarousel">
+<!-- INSTRUÇÃO: Customize cada card do carrossel com etapa do seu método.
+     Duplique <div class="cosmos-card"> para cada fase (típico: 4-5 cards).
+     Mude: badge, título, descrição, deliverables. -->
+      <div class="cosmos-card active">
+        <span class="cosmos-badge">Etapa 1</span>
+        <h3 class="cosmos-card-h">Nome da Primeira Fase</h3>
+        <p class="cosmos-card-p">Descrição do que acontece nesta fase. Contexto, foco, resultado esperado.</p>
+        <div class="cosmos-deliverable">Entrega específica: relatório, documento, análise</div>
+      </div>
+      <div class="cosmos-card">
+        <span class="cosmos-badge">Etapa 2</span>
+        <h3 class="cosmos-card-h">Nome da Segunda Fase</h3>
+        <p class="cosmos-card-p">Descrição do que acontece nesta fase.</p>
+        <div class="cosmos-deliverable">Outra entrega</div>
+      </div>
+    </div>
+    <div class="cosmos-nav">
+      <div class="cosmos-dots-row" id="cosmosDots">
+        <button class="cosmos-dot active"></button>
+        <button class="cosmos-dot"></button>
+      </div>
+      <button class="cosmos-btn" id="cosmosPrev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+      <button class="cosmos-btn" id="cosmosNext"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SLIDE 5: CASES + CREDIBILITY ═══ -->
+<section class="slide dark" id="credibility">
+  <div style="position:absolute;inset:0;z-index:0;background:#000;"></div>
+  <div class="container">
+    <p class="eyebrow reveal" style="margin-bottom:32px;">04 / CASES + CREDIBILIDADE</p>
+    <h2 class="display reveal reveal-delay-1" style="font-size:clamp(2rem,5vw,3.5rem);margin-bottom:48px;">O que nossos clientes dizem</h2>
+
+    <div class="t-grid reveal reveal-delay-2">
+<!-- INSTRUÇÃO: Customize cada card com depoimento real.
+     Duplique <div class="t-card"> para cada testimonial (típico: 3 cards).
+     Substitua: quote, nome, role, foto. -->
+      <div class="t-card">
+        <p class="t-card-quote">"{{TESTIMONIAL_QUOTE}}"</p>
+        <div class="t-card-footer">
+          <!-- INSTRUÇÃO: Substitua src pela URL da foto do cliente -->
+          <img class="t-card-photo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect fill='%23ccc' width='48' height='48'/%3E%3C/svg%3E" alt="Cliente">
+          <div>
+            <div class="t-card-name">{{TESTIMONIAL_NAME}}</div>
+            <div class="t-card-role">{{TESTIMONIAL_ROLE}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cred-stats reveal reveal-delay-3">
+<!-- INSTRUÇÃO: Customize cada stat com métrica real.
+     Duplique <div class="cred-stat"> para cada número (típico: 3-4 stats). -->
+      <div class="cred-stat">
+        <div class="num">{{STAT_NUMBER}}</div>
+        <div class="label">{{STAT_LABEL}}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SLIDE 6: INVESTIMENTO (PLANO ÚNICO) ═══ -->
+<section class="slide dark" id="investimento">
+  <div style="position:absolute;inset:0;z-index:0;background:linear-gradient(135deg,rgba(0,0,0,0.98) 0%,rgba(26,26,26,0.95) 100%);"></div>
+  <div class="container">
+    <p class="eyebrow reveal" style="margin-bottom:32px;">05 / INVESTIMENTO</p>
+
+    <div class="invest-block reveal">
+      <div class="invest-block-header">
+        <span class="invest-block-num">5.1</span>
+        <h3 class="invest-block-title">O Plano</h3>
+      </div>
+
+      <div class="reveal" style="margin-top:32px;">
+        <div class="invest-price-card">
+          <p class="invest-price-label">{{PLAN_NAME}}</p>
+          <p class="invest-price-value">{{PLAN_PRICE}}<span class="invest-price-period">{{PLAN_PERIOD}}</span></p>
+          <span class="invest-savings">{{PLAN_ECONOMY}}</span>
+        </div>
+      </div>
+
+      <div class="reveal" style="margin-top:48px;">
+        <p style="font-size:14px;color:var(--gray-30);max-width:640px;line-height:1.7;">Descrição do que está incluso no plano. O escopo completo, as entregas mensais, o nível de suporte, a equipe dedicada.</p>
+      </div>
+
+      <div class="delivery-grid reveal" style="margin-top:32px;max-width:680px;">
+<!-- INSTRUÇÃO: Customize cada item com entrega/componente do plano.
+     Duplique <div class="delivery-item"> (típico: 4-6 items, grid 2x2 ou 2x3). -->
+        <div class="delivery-item">
+          <span class="tag">CATEGORIA</span>
+          <h5>Nome da Entrega</h5>
+          <p>Descrição breve do que é entregue nesta categoria.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="invest-separator"></div>
+
+    <div class="invest-block reveal">
+      <div class="invest-block-header">
+        <span class="invest-block-num">5.2</span>
+        <h3 class="invest-block-title">Comparativa de Mercado</h3>
+      </div>
+
+      <div class="reveal" style="margin-top:32px;">
+        <p style="font-size:11px;font-weight:700;letter-spacing:0.2em;color:var(--gray-50);text-transform:uppercase;margin-bottom:20px;">Se montar isso por fora, custaria:</p>
+        <div class="invest-anchor-table">
+<!-- INSTRUÇÃO: Customize cada linha com serviço individual + preço tabela.
+     Duplique <div class="invest-anchor-row"> para cada item (típico: 6-10 linhas). -->
+          <div class="invest-anchor-row"><span>Serviço / Profissional 1</span><span>R$ 0.000/mês</span></div>
+          <div class="invest-anchor-row"><span>Serviço / Profissional 2</span><span>R$ 0.000/mês</span></div>
+          <!-- Adicione mais linhas conforme necessário -->
+          <div class="invest-anchor-total"><span>Total mercado</span><span>{{PLAN_ORIGINAL_PRICE}}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="invest-separator"></div>
+
+    <div class="invest-block reveal">
+      <div class="invest-block-header">
+        <span class="invest-block-num">5.3</span>
+        <h3 class="invest-block-title">Setup Inicial</h3>
+      </div>
+
+      <div class="reveal" style="margin-top:32px;">
+        <div class="invest-setup-card">
+          <p style="font-size:11px;font-weight:700;letter-spacing:0.2em;color:var(--gray-50);text-transform:uppercase;margin-bottom:20px;">SETUP ÚNICO</p>
+          <div id="setup-original" class="invest-setup-original">{{SETUP_ORIGINAL}}</div>
+          <div id="setup-discount" class="invest-setup-new">
+            <p class="invest-setup-value">{{SETUP_PRICE}}</p>
+            <p class="invest-setup-discount">{{SETUP_DISCOUNT_LABEL}}</p>
+          </div>
+          <p style="font-size:13px;color:var(--gray-50);margin-top:16px;line-height:1.6;">{{SETUP_INSTALLMENT}}</p>
+          <p style="font-size:12px;color:var(--gray-50);margin-top:12px;line-height:1.5;opacity:0.7;">Descrição breve do que está incluído no setup: configurações, integrações, treinamentos iniciais.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:48px;">
+      <div class="scarcity-box">
+        <p style="font-size:14px;color:rgba(255,255,255,0.75);line-height:1.7;">Mensagem de urgência / scarcity: vagas limitadas, condições especiais válidas por X dias, capacidade restrita, etc.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SLIDE 7: PRÓXIMOS PASSOS + CTA ═══ -->
+<section class="slide dark grain" id="cta">
+  <div style="position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 100%,rgba(225,63,7,0.05) 0%,transparent 50%),#000;"></div>
+  <div class="gridlines" style="color:#fff;">
+    <div class="gl-v" style="left:max(0.75rem,calc((100% - 80rem)/2))"></div>
+    <div class="gl-v" style="right:max(0.75rem,calc((100% - 80rem)/2))"></div>
+    <div class="gl-h" style="top:48px"></div>
+    <div class="gl-h" style="bottom:48px"></div>
+    <div class="gl-dot" style="left:calc(max(0.75rem,calc((100% - 80rem)/2)) - 3px);top:45px"></div>
+    <div class="gl-dot" style="right:calc(max(0.75rem,calc((100% - 80rem)/2)) - 3px);top:45px"></div>
+    <div class="gl-dot" style="left:calc(max(0.75rem,calc((100% - 80rem)/2)) - 3px);bottom:45px"></div>
+    <div class="gl-dot" style="right:calc(max(0.75rem,calc((100% - 80rem)/2)) - 3px);bottom:45px"></div>
+  </div>
+  <div class="container">
+    <p class="eyebrow reveal" style="margin-bottom:24px;">06 / PRÓXIMOS PASSOS</p>
+    <h2 class="display reveal reveal-delay-1" style="font-size:clamp(2rem,5vw,3rem);margin-bottom:16px;">{{CTA_HEADLINE}}</h2>
+    <p class="reveal reveal-delay-1" style="font-size:16px;color:var(--gray-30);max-width:640px;margin-bottom:56px;line-height:1.7;">Descrição do próximo passo: análise da proposta, reunião, fechamento, etc. Deixe claro o que espera do cliente agora.</p>
+
+    <div class="roadmap reveal reveal-delay-2">
+<!-- INSTRUÇÃO: Customize cada roadmap item com fase/milestone.
+     Duplique <div class="roadmap-item"> para cada passo (típico: 3-4 items).
+     Mude: prazo, títulos, descrições, deliverables. -->
+      <div class="roadmap-item">
+        <div class="roadmap-marker"><span>PRAZO 1</span></div>
+        <div class="roadmap-dot rdot-now"></div>
+        <div class="roadmap-content">
+          <h4>Primeiro Passo</h4>
+          <p>Descrição do que acontece nesta fase.</p>
+          <div class="deliverables"><span class="deliverable">Entrega 1</span><span class="deliverable">Entrega 2</span></div>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-marker"><span>PRAZO 2</span></div>
+        <div class="roadmap-dot rdot-next"></div>
+        <div class="roadmap-content">
+          <h4>Segundo Passo</h4>
+          <p>Descrição do que acontece nesta fase.</p>
+          <div class="deliverables"><span class="deliverable">Entrega 3</span><span class="deliverable">Entrega 4</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal reveal-delay-3" style="text-align:center;margin-top:80px;">
+      <p class="display" style="font-size:clamp(1.6rem,4vw,2.5rem);margin-bottom:24px;">{{CTA_HEADLINE}}</p>
+      <p style="font-size:16px;color:var(--gray-50);margin-bottom:40px;">Esta proposta expira em {{CTA_EXPIRY}}.</p>
+
+      <!-- Registration Form -->
+      <div id="registroForm" style="max-width:680px;margin:0 auto;text-align:left;">
+        <form id="formCadastro" onsubmit="enviarCadastro(event)" style="display:flex;flex-direction:column;gap:20px;">
+
+          <p style="font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gray-50);margin-bottom:4px;">DADOS DO CONTRATANTE</p>
+
+          <div>
+            <label style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-50);display:block;margin-bottom:6px;">Denominação Social</label>
+            <input type="text" name="denominacao_social" required placeholder="Empresa Ltda" style="width:100%;padding:14px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-family:'Inter Tight',sans-serif;font-size:15px;outline:none;transition:border-color 0.3s;" onfocus="this.style.borderColor='rgba(255,255,255,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'">
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div>
+              <label style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-50);display:block;margin-bottom:6px;">CNPJ</label>
+              <input type="text" name="cnpj" required placeholder="00.000.000/0001-00" oninput="maskCNPJ(this)" style="width:100%;padding:14px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-family:'Inter Tight',sans-serif;font-size:15px;outline:none;transition:border-color 0.3s;" onfocus="this.style.borderColor='rgba(255,255,255,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'">
+            </div>
+            <div>
+              <label style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-50);display:block;margin-bottom:6px;">CEP</label>
+              <input type="text" name="cep_empresa" required placeholder="00000-000" oninput="maskCEP(this)" onblur="buscarCEP(this,'bairro_empresa','cidade_empresa','uf_empresa','endereco_empresa')" style="width:100%;padding:14px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-family:'Inter Tight',sans-serif;font-size:15px;outline:none;transition:border-color 0.3s;" onfocus="this.style.borderColor='rgba(255,255,255,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'">
+            </div>
+          </div>
+
+          <div>
+            <label style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-50);display:block;margin-bottom:6px;">Endereço</label>
+            <input type="text" name="endereco_empresa" required placeholder="Rua Exemplo, 123" style="width:100%;padding:14px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-family:'Inter Tight',sans-serif;font-size:15px;outline:none;transition:border-color 0.3s;" onfocus="this.style.borderColor='rgba(255,255,255,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'">
+          </div>
+
+          <div style="display:grid;grid-template-columns:2fr 1fr 80px;gap:16px;">
+            <div>
+              <label style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-50);display:block;margin-bottom:6px;">Bairro</label>
+              <input type="text" name="bairro_empresa" required style="width:100%;padding:14px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-family:'Inter Tight',sans-serif;font-size:15px;outline:none;transition:border-color 0.3s;" onfocus="this.style.borderColor='rgba(255,255,255,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'">
+            </div>
+            <div>
+              <label style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-50);display:block;margin-bottom:6px;">Cidade</label>
+              <input type="text" name="cidade_empresa" required style="width:100%;padding:14px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-family:'Inter Tight',sans-serif;font-size:15px;outline:none;transition:border-color 0.3s;" onfocus="this.style.borderColor='rgba(255,255,255,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'">
+            </div>
+            <div>
+              <label style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-50);display:block;margin-bottom:6px;">UF</label>
+              <input type="text" name="uf_empresa" required maxlength="2" placeholder="SP" style="width:100%;padding:14px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-family:'Inter Tight',sans-serif;font-size:15px;outline:none;transition:border-color 0.3s;text-transform:uppercase;" onfocus="this.style.borderColor='rgba(255,255,255,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'">
+            </div>
+          </div>
+
+          <div>
+            <label style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-50);display:block;margin-bottom:6px;">E-mail (empresa)</label>
+            <input type="email" name="email_empresa" required placeholder="contato@empresa.com.br" style="width:100%;padding:14px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-family:'Inter Tight',sans-serif;font-size:15px;outline:none;transition:border-color 0.3s;" onfocus="this.style.borderColor='rgba(255,255,255,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'">
+          </div>
+
+          <div style="height:1px;background:rgba(255,255,255,0.08);margin:12px 0;"></div>
+
+          <p style="font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gray-50);margin-bottom:4px;">REPRESENTANTE LEGAL</p>
+
+          <div>
+            <label style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-50);display:block;margin-bottom:6px;">Nome Completo</label>
+            <input type="text" name="nome_representante" required placeholder="Nome" style="width:100%;padding:14px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-family:'Inter Tight',sans-serif;font-size:15px;outline:none;transition:border-color 0.3s;" onfocus="this.style.borderColor='rgba(255,255,255,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'">
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div>
+              <label style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-50);display:block;margin-bottom:6px;">CPF</label>
+              <input type="text" name="cpf" required placeholder="000.000.000-00" oninput="maskCPF(this)" style="width:100%;padding:14px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-family:'Inter Tight',sans-serif;font-size:15px;outline:none;transition:border-color 0.3s;" onfocus="this.style.borderColor='rgba(255,255,255,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'">
+            </div>
+            <div>
+              <label style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-50);display:block;margin-bottom:6px;">Celular</label>
+              <input type="tel" name="telefone_celular" required placeholder="(11) 99999-0000" oninput="maskPhone(this)" style="width:100%;padding:14px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-family:'Inter Tight',sans-serif;font-size:15px;outline:none;transition:border-color 0.3s;" onfocus="this.style.borderColor='rgba(255,255,255,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'">
+            </div>
+          </div>
+
+          <div>
+            <label style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-50);display:block;margin-bottom:6px;">E-mail (pessoal)</label>
+            <input type="email" name="email_pessoal" required placeholder="seu@email.com.br" style="width:100%;padding:14px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-family:'Inter Tight',sans-serif;font-size:15px;outline:none;transition:border-color 0.3s;" onfocus="this.style.borderColor='rgba(255,255,255,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'">
+          </div>
+
+          <!-- INSTRUÇÃO: Customize os hidden fields com dados da proposta específica -->
+          <input type="hidden" name="plano" value="{{PLAN_NAME}} / {{PLAN_PRICE}}">
+          <input type="hidden" name="proposta" value="{{COMPANY_NAME}} / {{MONTH_YEAR}}">
+
+          <button type="submit" class="shimmer-btn" style="width:100%;margin-top:16px;cursor:pointer;border:none;">ENVIAR CADASTRO PARA CONTRATAÇÃO</button>
+          <p style="font-size:11px;color:var(--gray-50);text-align:center;line-height:1.5;margin-top:8px;">Seus dados serão enviados para financeiro@agenciaatacama.com.br com detalhes da negociação.</p>
+        </form>
+        <div id="formSucesso" style="display:none;text-align:center;padding:48px 24px;">
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none" style="margin-bottom:16px;"><circle cx="28" cy="28" r="27" stroke="rgba(255,255,255,0.3)" stroke-width="2"/><path d="M18 28l7 7 13-13" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <p class="display" style="font-size:1.8rem;margin-bottom:12px;">Cadastro enviado.</p>
+          <p style="font-size:15px;color:var(--gray-30);line-height:1.6;">Nosso time financeiro recebeu seus dados e o detalhamento da proposta. Em breve entraremos em contato.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:48px;">
+      <div class="scarcity-box">
+        <p style="font-size:14px;color:rgba(255,255,255,0.75);line-height:1.7;">Esta proposta tem validade até {{CTA_EXPIRY}}. Condições especiais (desconto, setup) são válidas apenas nesta janela.</p>
+      </div>
+    </div>
+  </div>
+  <span class="coord coord-left">8°02'36.6" S</span>
+  <span class="coord coord-right">34°53'53.5" W</span>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<section style="text-align:center;padding:80px 0;background:#000;">
+  <svg viewBox="0 0 1700 1240" fill="white" style="width:48px;height:auto;opacity:0.2;"><path d="M1682.36 1220 1188.62 20H951.77v.02H748.23l.01-.02H511.38L17.64 1220h247.7L737.38 46.96v1173.02h225.25V46.96L1434.66 1220Zm0 0"/></svg>
+  <p style="font-family:'Cormorant Unicase',Georgia,serif;font-size:clamp(1.8rem,4vw,2.5rem);font-weight:600;letter-spacing:-0.025em;line-height:0.9;margin-top:24px;">Atacama Digital</p>
+  <p style="color:var(--gray-50);font-size:10px;letter-spacing:0.1em;margin-top:24px;">Clarity by Atacama Digital . 2026</p>
+</section>
+
+<!-- ═══ JAVASCRIPT ═══ -->
+<script>
+// Scroll Reveal
+var reveals=document.querySelectorAll('.reveal');
+var revealObs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible')});},{threshold:0.1,rootMargin:'0px 0px -50px 0px'});
+reveals.forEach(function(el){revealObs.observe(el);});
+
+// Gridlines frame activation
+document.querySelectorAll('.gridlines').forEach(function(gl){
+  var glObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){gl.classList.add('gl-active');glObs.disconnect();}
+    });
+  },{threshold:0.1});
+  glObs.observe(gl.parentElement||gl);
+});
+
+// COSMOS Visual scroll-trigger
+var cosmosSection=document.getElementById('cosmos');
+if(cosmosSection){
+  var cosmosObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        cosmosSection.classList.add('cosmos-active');
+        cosmosObs.disconnect();
+      }
+    });
+  },{threshold:0.05});
+  cosmosObs.observe(cosmosSection);
+}
+
+// Setup Price Animation
+var ss=document.getElementById('setup-section');
+if(ss){var so=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){setTimeout(function(){var orig=document.getElementById('setup-original');var disc=document.getElementById('setup-discount');if(orig)orig.classList.add('struck');if(disc)disc.classList.add('revealed');},1500);so.disconnect();}});},{threshold:0.3});so.observe(ss);}
+
+// Registration Form - Formspree
+var FORMSPREE_ENDPOINT='https://formspree.io/f/mjgajnvl';
+
+function enviarCadastro(e){
+  e.preventDefault();
+  var f=e.target;
+  var btn=f.querySelector('button[type="submit"]');
+  var btnText=btn.textContent;
+  btn.textContent='ENVIANDO...';
+  btn.style.opacity='0.6';
+  btn.disabled=true;
+
+  var params={
+    _subject:'PROPOSTA COMERCIAL / '+f.denominacao_social.value,
+    denominacao_social:f.denominacao_social.value,
+    cnpj:f.cnpj.value,
+    cep_empresa:f.cep_empresa.value,
+    endereco_empresa:f.endereco_empresa.value,
+    bairro_empresa:f.bairro_empresa.value,
+    cidade_empresa:f.cidade_empresa.value,
+    uf_empresa:f.uf_empresa.value,
+    email_empresa:f.email_empresa.value,
+    nome_representante:f.nome_representante.value,
+    cpf:f.cpf.value,
+    telefone_celular:f.telefone_celular.value,
+    email_pessoal:f.email_pessoal.value,
+    plano:f.plano.value,
+    proposta:f.proposta.value,
+    data_cadastro:new Date().toLocaleString('pt-BR')
+  };
+
+  fetch(FORMSPREE_ENDPOINT,{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify(params)
+  })
+  .then(function(response){
+    if(response.ok){
+      document.getElementById('formCadastro').style.display='none';
+      document.getElementById('formSucesso').style.display='block';
+    }else{
+      throw new Error('Erro no envio');
+    }
+  })
+  .catch(function(err){
+    btn.textContent=btnText;
+    btn.style.opacity='1';
+    btn.disabled=false;
+    alert('Erro ao enviar. Tente novamente ou entre em contato.');
+    console.error('Error:',err);
+  });
+}
+
+// CEP Mask
+function maskCEP(input){
+  var v=input.value.replace(/\D/g,'');
+  if(v.length>5)v=v.substring(0,5)+'-'+v.substring(5,8);
+  input.value=v;
+}
+
+function buscarCEP(cepInput,bairroName,cidadeName,ufName,enderecoName){
+  var cep=cepInput.value.replace(/\D/g,'');
+  if(cep.length!==8)return;
+  cepInput.style.borderColor='rgba(225,63,7,0.4)';
+  fetch('https://viacep.com.br/ws/'+cep+'/json/')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      cepInput.style.borderColor='rgba(255,255,255,0.12)';
+      if(d.erro){cepInput.style.borderColor='rgba(225,63,7,0.6)';return;}
+      var form=cepInput.closest('form');
+      if(d.bairro&&form.querySelector('[name="'+bairroName+'"]'))form.querySelector('[name="'+bairroName+'"]').value=d.bairro;
+      if(d.localidade&&form.querySelector('[name="'+cidadeName+'"]'))form.querySelector('[name="'+cidadeName+'"]').value=d.localidade;
+      if(d.uf&&form.querySelector('[name="'+ufName+'"]'))form.querySelector('[name="'+ufName+'"]').value=d.uf;
+    })
+    .catch(function(){cepInput.style.borderColor='rgba(255,255,255,0.12)';});
+}
+
+// CNPJ Mask
+function maskCNPJ(input){
+  var v=input.value.replace(/\D/g,'');
+  if(v.length>14)v=v.substring(0,14);
+  if(v.length>12)v=v.substring(0,2)+'.'+v.substring(2,5)+'.'+v.substring(5,8)+'/'+v.substring(8,12)+'-'+v.substring(12);
+  else if(v.length>8)v=v.substring(0,2)+'.'+v.substring(2,5)+'.'+v.substring(5,8)+'/'+v.substring(8);
+  else if(v.length>5)v=v.substring(0,2)+'.'+v.substring(2,5)+'.'+v.substring(5);
+  else if(v.length>2)v=v.substring(0,2)+'.'+v.substring(2);
+  input.value=v;
+  validateCNPJ(input);
+}
+
+function validateCNPJ(input){
+  var cnpj=input.value.replace(/\D/g,'');
+  if(cnpj.length<14){input.style.borderColor='rgba(255,255,255,0.12)';return;}
+  if(/^(\d)\1{13}$/.test(cnpj)){input.style.borderColor='rgba(225,63,7,0.6)';return;}
+  var t=cnpj.length-2,d=cnpj.substring(t),n=cnpj.substring(0,t),s=0,p=t-7;
+  for(var i=t;i>=1;i--){s+=parseInt(n.charAt(t-i))*p--;if(p<2)p=9;}
+  var r=s%11<2?0:11-s%11;
+  if(r!=parseInt(d.charAt(0))){input.style.borderColor='rgba(225,63,7,0.6)';return;}
+  t++;n=cnpj.substring(0,t);s=0;p=t-7;
+  for(var i=t;i>=1;i--){s+=parseInt(n.charAt(t-i))*p--;if(p<2)p=9;}
+  r=s%11<2?0:11-s%11;
+  if(r!=parseInt(d.charAt(1))){input.style.borderColor='rgba(225,63,7,0.6)';return;}
+  input.style.borderColor='rgba(0,200,100,0.5)';
+}
+
+// CPF Mask
+function maskCPF(input){
+  var v=input.value.replace(/\D/g,'');
+  if(v.length>11)v=v.substring(0,11);
+  if(v.length>9)v=v.substring(0,3)+'.'+v.substring(3,6)+'.'+v.substring(6,9)+'-'+v.substring(9);
+  else if(v.length>6)v=v.substring(0,3)+'.'+v.substring(3,6)+'.'+v.substring(6);
+  else if(v.length>3)v=v.substring(0,3)+'.'+v.substring(3);
+  input.value=v;
+  validateCPF(input);
+}
+
+function validateCPF(input){
+  var cpf=input.value.replace(/\D/g,'');
+  if(cpf.length<11){input.style.borderColor='rgba(255,255,255,0.12)';return;}
+  if(/^(\d)\1{10}$/.test(cpf)){input.style.borderColor='rgba(225,63,7,0.6)';return;}
+  var s=0;for(var i=0;i<9;i++)s+=parseInt(cpf.charAt(i))*(10-i);
+  var r=11-s%11;if(r>9)r=0;
+  if(r!=parseInt(cpf.charAt(9))){input.style.borderColor='rgba(225,63,7,0.6)';return;}
+  s=0;for(var i=0;i<10;i++)s+=parseInt(cpf.charAt(i))*(11-i);
+  r=11-s%11;if(r>9)r=0;
+  if(r!=parseInt(cpf.charAt(10))){input.style.borderColor='rgba(225,63,7,0.6)';return;}
+  input.style.borderColor='rgba(0,200,100,0.5)';
+}
+
+// Phone Mask
+function maskPhone(input){
+  var v=input.value.replace(/\D/g,'');
+  if(v.length>11)v=v.substring(0,11);
+  if(v.length>6)v='('+v.substring(0,2)+') '+v.substring(2,v.length>10?7:6)+'-'+v.substring(v.length>10?7:6);
+  else if(v.length>2)v='('+v.substring(0,2)+') '+v.substring(2);
+  input.value=v;
+}
+
+// COSMOS Carousel
+var cosmosIdx=0,cosmosTimer;
+function goCosmos(n){
+  var cards=document.querySelectorAll('#cosmosCarousel .cosmos-card');
+  var dots=document.querySelectorAll('#cosmosDots .cosmos-dot');
+  if(!cards.length)return;
+  cards[cosmosIdx].classList.remove('active');
+  dots[cosmosIdx].classList.remove('active');
+  cosmosIdx=((n%cards.length)+cards.length)%cards.length;
+  cards[cosmosIdx].classList.add('active');
+  dots[cosmosIdx].classList.add('active');
+  document.querySelectorAll('.cosmos-node-vis').forEach(function(nd,i){
+    nd.style.opacity=i===cosmosIdx?'1':'0.35';
+    nd.style.transition='opacity 0.5s ease';
+  });
+  clearInterval(cosmosTimer);
+  cosmosTimer=setInterval(function(){goCosmos(cosmosIdx+1);},5000);
+}
+document.addEventListener('DOMContentLoaded',function(){
+  var prev=document.getElementById('cosmosPrev');
+  var next=document.getElementById('cosmosNext');
+  if(prev)prev.addEventListener('click',function(){goCosmos(cosmosIdx-1);});
+  if(next)next.addEventListener('click',function(){goCosmos(cosmosIdx+1);});
+  cosmosTimer=setInterval(function(){goCosmos(cosmosIdx+1);},5000);
+});
+</script>
+</body>
+</html>

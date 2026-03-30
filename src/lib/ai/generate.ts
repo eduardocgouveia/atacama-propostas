@@ -1,19 +1,206 @@
 import { getClient, MODELS } from "./client"
 import { getContentPrompt } from "./prompts"
-import { renderProposal, type ProposalContent } from "../template-engine"
+import { renderProposal, type TemplateType } from "../template-engine"
 import type { AnalysisResult } from "./analyze"
 import type { EditedProposalData } from "../types"
+
+/**
+ * Convert structured AI JSON into flat placeholder map for the template.
+ */
+function buildPlaceholders(
+  ai: Record<string, unknown>,
+  editedData: EditedProposalData,
+  formActionUrl: string,
+  templateType: TemplateType
+): Record<string, string> {
+  const hero = (ai.hero || {}) as Record<string, string>
+  const truth = (ai.truth || {}) as Record<string, unknown>
+  const solution = (ai.solution || {}) as Record<string, unknown>
+  const cosmos = (ai.cosmos || {}) as Record<string, unknown>
+  const investment = (ai.investment || {}) as Record<string, unknown>
+  const roadmap = (ai.roadmap || {}) as Record<string, unknown>
+
+  const truthCards = (truth.cards || []) as Array<Record<string, string>>
+  const solCards = (solution.cards || []) as Array<Record<string, string>>
+  const cosmosCards = (cosmos.cards || []) as Array<Record<string, string>>
+  const teamBadges = (solution.teamBadges || []) as string[]
+  const roadmapItems = (roadmap.items || []) as Array<Record<string, unknown>>
+  const features = (investment.features || []) as string[]
+
+  const values: Record<string, string> = {
+    // Hero
+    MONTH_YEAR: hero.monthYear || new Date().toLocaleDateString("pt-BR", { month: "long", year: "numeric" }).toUpperCase(),
+    COMPANY_NAME: editedData.companyName,
+    HERO_TAGLINE: hero.tagline || editedData.diagnosis,
+    EXPIRY_DATE: hero.expiryDate || "",
+    CONTACT_NAME: editedData.contactName,
+    LOCATION: editedData.location,
+
+    // Truth
+    TRUTH_HEADLINE: (truth.headline as string) || editedData.inconvenientTruth,
+    TRUTH_QUOTE: (truth.quote as string) || "",
+    TRUTH_DESCRIPTION: (truth.description as string) || "",
+    TRUTH_QUOTE_ATTRIBUTION: (truth.attribution as string) || "",
+  }
+
+  // Pain point cards (tipo-b uses PAIN_POINT_N, tipo-a uses CARD_N)
+  truthCards.forEach((card, i) => {
+    const n = i + 1
+    values[`PAIN_POINT_${n}_STAT`] = card.eyebrow || card.stat || `PROBLEMA #${n}`
+    values[`PAIN_POINT_${n}_TITLE`] = card.title || editedData.selectedPains[i] || ""
+    values[`PAIN_POINT_${n}_DESCRIPTION`] = card.description || ""
+  })
+
+  // Solution
+  values.SOLUTION_HEADLINE = (solution.headline as string) || ""
+  values.SOLUTION_DESCRIPTION = (solution.description as string) || ""
+  solCards.forEach((card, i) => {
+    const n = i + 1
+    values[`SOLUTION_${n}_TITLE`] = card.title || ""
+    values[`SOLUTION_${n}_DESCRIPTION`] = card.description || ""
+  })
+
+  // Team badges
+  teamBadges.forEach((b, i) => {
+    values[`TEAM_BADGE_${i + 1}`] = b
+  })
+
+  // COSMOS
+  cosmosCards.forEach((card, i) => {
+    const n = i + 1
+    values[`COSMOS_CARD_${n}_TITLE`] = card.title || ""
+    values[`COSMOS_CARD_${n}_DESCRIPTION`] = card.description || ""
+    // Deliverables can be string or array
+    const del = card.deliverable || card.deliverables
+    if (typeof del === "string") {
+      values[`COSMOS_DELIVERABLE_${n}_1`] = del
+      values[`COSMOS_DELIVERABLE_${n}_2`] = ""
+    } else if (Array.isArray(del)) {
+      (del as string[]).forEach((d, j) => {
+        values[`COSMOS_DELIVERABLE_${n}_${j + 1}`] = d
+      })
+    }
+  })
+
+  // Credibility
+  const credNums = ((ai.credibility as Record<string, unknown>)?.numbers || []) as Array<Record<string, string>>
+  credNums.forEach((n, i) => {
+    values[`CRED_STAT_${i + 1}_NUMBER`] = n.value || ""
+    values[`CRED_STAT_${i + 1}_LABEL`] = n.label || ""
+  })
+  values.CREDIBILITY_INTRO = ((ai.credibility as Record<string, unknown>)?.intro as string) || ""
+  values.CREDIBILITY_DESCRIPTION = ((ai.credibility as Record<string, unknown>)?.description as string) || ""
+
+  // Testimonials
+  const testimonials = ((ai.credibility as Record<string, unknown>)?.testimonials || []) as Array<Record<string, string>>
+  testimonials.forEach((t, i) => {
+    const n = i + 1
+    values[`TESTIMONIAL_${n}_QUOTE`] = t.quote || ""
+    values[`TESTIMONIAL_${n}_NAME`] = t.name || ""
+    values[`TESTIMONIAL_${n}_ROLE`] = t.role || ""
+  })
+
+  // Also set old-style TESTIMONIAL_ for tipo-a compat
+  values.TESTIMONIAL_QUOTE = testimonials[0]?.quote || ""
+  values.TESTIMONIAL_NAME = testimonials[0]?.name || ""
+  values.TESTIMONIAL_ROLE = testimonials[0]?.role || ""
+
+  // Investment - depends on template type
+  values.INVESTMENT_HEADLINE = (investment.headline as string) || "O investimento."
+  values.INVESTMENT_DESCRIPTION = (investment.description as string) || ""
+
+  if (templateType === "tipo-b" && editedData.selectedPlans.length >= 3) {
+    // 3 plans
+    editedData.selectedPlans.forEach((plan, i) => {
+      const letter = String.fromCharCode(65 + i) // A, B, C
+      values[`PLAN_${letter}_BADGE`] = plan.name
+      values[`PLAN_${letter}_MONTHLY_PRICE`] = `R$ ${plan.price.toLocaleString("pt-BR")}/mês`
+      values[`PLAN_${letter}_SETUP_PRICE`] = `Setup: R$ ${plan.setup.toLocaleString("pt-BR")}`
+
+      // Features from AI or plan description
+      const planFeatures = (investment[`plan${letter}Features`] as string[]) || features
+      planFeatures.forEach((f, j) => {
+        values[`PLAN_${letter}_ITEM_${j + 1}`] = f
+      })
+    })
+    // Recommended plan discount
+    values.PLAN_B_SETUP_DISCOUNT = (investment.planBSetupDiscount as string) || ""
+  } else {
+    // Single plan (tipo-a)
+    const plan = editedData.selectedPlans[0]
+    values.PLAN_NAME = plan.name
+    values.PLAN_PRICE = `R$ ${plan.price.toLocaleString("pt-BR")}`
+    values.PLAN_PERIOD = plan.type === "one-shot" ? " (único)" : "/mês"
+    values.PLAN_BASE = plan.name
+    values.PLAN_ORIGINAL_PRICE = (investment.anchorTotal as string) || ""
+    values.PLAN_ECONOMY = (investment.savingsText as string) || ""
+    values.PLAN_UNIT_PRICE = `R$ ${plan.price.toLocaleString("pt-BR")}`
+    values.PLAN_DISCOUNT_LABEL = (investment.discountLabel as string) || ""
+    values.SAVINGS_VS_MARKET = (investment.savingsText as string) || ""
+    values.ANCHOR_TOTAL = (investment.anchorTotal as string) || ""
+    values.SETUP_ORIGINAL = (investment.setupOriginal as string) || `R$ ${Math.round(plan.setup * 1.5).toLocaleString("pt-BR")}`
+    values.SETUP_PRICE = `R$ ${plan.setup.toLocaleString("pt-BR")}`
+    values.SETUP_DISCOUNT_LABEL = (investment.setupDiscountLabel as string) || ""
+    values.SETUP_INSTALLMENT = (investment.setupInstallments as string) || ""
+  }
+
+  values.SCARCITY_TEXT = (investment.scarcityText as string) || "Capacidade limitada. Vagas abertas para novos clientes até o final do mês."
+  values.SCARCITY_DEADLINE = (investment.scarcityDeadline as string) || ""
+
+  // Setup section (tipo-b)
+  values.SETUP_DESCRIPTION = (investment.setupDescription as string) || ""
+  values.SETUP_ORIGINAL_PRICE = (investment.setupOriginal as string) || ""
+  values.SETUP_DISCOUNTED_PRICE = (investment.setupDiscount as string) || ""
+  values.SETUP_DISCOUNT_PERCENT = (investment.setupDiscountPercent as string) || ""
+
+  // Roadmap
+  values.ROADMAP_HEADLINE = (roadmap.headline as string) || "Próximos Passos"
+  roadmapItems.forEach((item, i) => {
+    const n = i + 1
+    values[`ROADMAP_STEP_${n}_TIMEFRAME`] = (item.marker as string) || ""
+    values[`ROADMAP_STEP_${n}_TITLE`] = (item.title as string) || ""
+    values[`ROADMAP_STEP_${n}_DESCRIPTION`] = (item.description as string) || ""
+    const deliverables = (item.deliverables || []) as string[]
+    deliverables.forEach((d, j) => {
+      values[`ROADMAP_STEP_${n}_DELIVERABLE_${j + 1}`] = d
+    })
+  })
+
+  // CTA / Form
+  const cta = (ai.cta || {}) as Record<string, string>
+  values.CTA_FINAL_HEADLINE = cta.headline || "Vamos começar?"
+  values.CTA_FINAL_EXPIRY = values.EXPIRY_DATE
+  values.CTA_FINAL_BUTTON_TEXT = "Quero Contratar"
+  values.CTA_FINAL_LINK = formActionUrl
+  values.CTA_LINK_ACEITE = formActionUrl
+  values.CTA_HEADLINE = values.CTA_FINAL_HEADLINE
+  values.CTA_EXPIRY = values.EXPIRY_DATE
+  values.CTA_LINK = formActionUrl
+  values.FORM_ACTION_URL = formActionUrl
+
+  // Coordinates (Recife default)
+  values.LOCATION_LAT = "8°02'36.6\" S"
+  values.LOCATION_LONG = "34°53'53.5\" W"
+
+  return values
+}
 
 export async function generateProposalContent(
   editedData: EditedProposalData,
   analysis: AnalysisResult,
   formActionUrl: string
 ): Promise<{ html: string }> {
+  const templateType: TemplateType =
+    editedData.selectedPlans.length >= 3 ? "tipo-b" : "tipo-a"
+
   const mainPlan = editedData.selectedPlans[0]
   const systemPrompt = getContentPrompt(mainPlan.name)
 
   const plansInfo = editedData.selectedPlans
-    .map((p) => `- ${p.name}: R$ ${p.price.toLocaleString("pt-BR")}${p.type === "one-shot" ? " (unico)" : "/mes"} + Setup R$ ${p.setup.toLocaleString("pt-BR")} | ${p.description}`)
+    .map(
+      (p) =>
+        `- ${p.name}: R$ ${p.price.toLocaleString("pt-BR")}${p.type === "one-shot" ? " (unico)" : "/mes"} + Setup R$ ${p.setup.toLocaleString("pt-BR")} | ${p.description}`
+    )
     .join("\n")
 
   const userPrompt = `Gere o JSON de conteudo para a proposta:
@@ -35,8 +222,10 @@ DESAFIOS: ${editedData.challenges}
 DORES:
 ${editedData.selectedPains.map((p, i) => `${i + 1}. ${p}`).join("\n")}
 
-PLANO(S):
+PLANO(S) SELECIONADOS:
 ${plansInfo}
+
+TEMPLATE: ${templateType === "tipo-b" ? "3 PLANOS (tipo-b)" : "1 PLANO (tipo-a)"}
 
 PERSONA: ${analysis.analysis.personaMatch} (${analysis.analysis.personaAdherence}%)
 GATILHOS: ${analysis.analysis.emotionalTriggers?.join(", ") || ""}`
@@ -58,104 +247,8 @@ GATILHOS: ${analysis.analysis.emotionalTriggers?.join(", ") || ""}`
 
   const aiContent = JSON.parse(cleaned)
 
-  // Build ProposalContent with AI data + overrides from edited data
-  const content: ProposalContent = {
-    // Hero - use edited data directly
-    monthYear: aiContent.monthYear || new Date().toLocaleDateString("pt-BR", { month: "long", year: "numeric" }).toUpperCase(),
-    companyName: editedData.companyName,
-    heroTagline: aiContent.heroTagline || editedData.diagnosis,
-    expiryDate: aiContent.expiryDate || "",
-    contactName: editedData.contactName,
-    location: editedData.location,
+  const values = buildPlaceholders(aiContent, editedData, formActionUrl, templateType)
+  const html = renderProposal(templateType, values)
 
-    // Verdade Inconveniente
-    truthHeadline: aiContent.truthHeadline || editedData.inconvenientTruth,
-    truthQuote: aiContent.truthQuote || "",
-    card1Eyebrow: aiContent.card1Eyebrow || "DOR 1",
-    card1Title: aiContent.card1Title || editedData.selectedPains[0] || "",
-    card1Desc: aiContent.card1Desc || "",
-    card2Eyebrow: aiContent.card2Eyebrow || "DOR 2",
-    card2Title: aiContent.card2Title || editedData.selectedPains[1] || "",
-    card2Desc: aiContent.card2Desc || "",
-    card3Eyebrow: aiContent.card3Eyebrow || "DOR 3",
-    card3Title: aiContent.card3Title || editedData.selectedPains[2] || "",
-    card3Desc: aiContent.card3Desc || "",
-
-    // Solucao
-    solutionHeadline: aiContent.solutionHeadline || "",
-    solutionDesc: aiContent.solutionDesc || "",
-    sol1Title: aiContent.sol1Title || "",
-    sol1Desc: aiContent.sol1Desc || "",
-    sol2Title: aiContent.sol2Title || "",
-    sol2Desc: aiContent.sol2Desc || "",
-    sol3Title: aiContent.sol3Title || "",
-    sol3Desc: aiContent.sol3Desc || "",
-    sol4Title: aiContent.sol4Title || "",
-    sol4Desc: aiContent.sol4Desc || "",
-    sol5Title: aiContent.sol5Title || "",
-    sol5Desc: aiContent.sol5Desc || "",
-    teamBadges: aiContent.teamBadges || ["Gestor de Trafego", "Customer Success", "Social Media", "Estrategista"],
-
-    // COSMOS
-    cosmos1Title: aiContent.cosmos1Title || "Imersao e Diagnostico",
-    cosmos1Desc: aiContent.cosmos1Desc || "",
-    cosmos1Deliverable: aiContent.cosmos1Deliverable || "",
-    cosmos2Title: aiContent.cosmos2Title || "Mapeamento de Oportunidades",
-    cosmos2Desc: aiContent.cosmos2Desc || "",
-    cosmos2Deliverable: aiContent.cosmos2Deliverable || "",
-    cosmos3Title: aiContent.cosmos3Title || "Execucao Criativa e Tecnica",
-    cosmos3Desc: aiContent.cosmos3Desc || "",
-    cosmos3Deliverable: aiContent.cosmos3Deliverable || "",
-    cosmos4Title: aiContent.cosmos4Title || "Monitoramento e Otimizacao",
-    cosmos4Desc: aiContent.cosmos4Desc || "",
-    cosmos4Deliverable: aiContent.cosmos4Deliverable || "",
-    cosmos5Title: aiContent.cosmos5Title || "Escalonamento Estrategico",
-    cosmos5Desc: aiContent.cosmos5Desc || "",
-    cosmos5Deliverable: aiContent.cosmos5Deliverable || "",
-
-    // Credibilidade (Atacama stats, not prospect-specific)
-    test1Quote: aiContent.test1Quote || "Resultado consistente mes a mes. A Atacama entende o que funciona.",
-    test1Name: aiContent.test1Name || "Cliente Atacama",
-    test1Role: aiContent.test1Role || "Diretor Comercial",
-    test2Quote: aiContent.test2Quote || "Finalmente uma agencia que entrega dashboard de verdade.",
-    test2Name: aiContent.test2Name || "Cliente Atacama",
-    test2Role: aiContent.test2Role || "CEO",
-    test3Quote: aiContent.test3Quote || "O metodo COSMOS organizou tudo. Agora sabemos exatamente onde investir.",
-    test3Name: aiContent.test3Name || "Cliente Atacama",
-    test3Role: aiContent.test3Role || "Gerente de Marketing",
-    clientPills: aiContent.clientPills || ["OdontoCompany", "Grau Educacional", "COOPSETA", "Ballian Business", "Precisa Prime"],
-
-    // Investimento - use catalog data
-    investmentDesc: aiContent.investmentDesc || "",
-    anchorRows: aiContent.anchorRows || [],
-    anchorTotal: aiContent.anchorTotal || "",
-    planName: mainPlan.name,
-    planPrice: `R$ ${mainPlan.price.toLocaleString("pt-BR")}`,
-    planPeriod: mainPlan.type === "one-shot" ? " (unico)" : "/mes",
-    savingsText: aiContent.savingsText || "",
-    features: aiContent.features || [],
-    setupOriginal: `R$ ${(mainPlan.setup * 1.5).toLocaleString("pt-BR")}`,
-    setupDiscount: `R$ ${mainPlan.setup.toLocaleString("pt-BR")}`,
-    setupInstallments: aiContent.setupInstallments || `ou 2x de R$ ${Math.round(mainPlan.setup / 2).toLocaleString("pt-BR")}`,
-    setupDesc: aiContent.setupDesc || "",
-    setupDiscountLabel: aiContent.setupDiscountLabel || "Desconto exclusivo primeira turma",
-    scarcityText: aiContent.scarcityText || "Capacidade limitada. Vagas abertas para novos clientes ate o final do mes.",
-
-    // Proximos Passos
-    ctaHeadline: aiContent.ctaHeadline || "Proximos Passos",
-    ctaDesc: aiContent.ctaDesc || "",
-    roadmapItems: aiContent.roadmapItems || [
-      { marker: "SEMANA 1", title: "Kickoff e Imersao", description: "Reuniao de alinhamento e diagnostico completo.", deliverables: ["Kickoff", "Briefing"] },
-      { marker: "SEMANA 2-3", title: "Setup e Lancamento", description: "Configuracao de campanhas e primeiros testes.", deliverables: ["Campanhas", "LPs"] },
-      { marker: "MES 2+", title: "Otimizacao Continua", description: "Analise de dados e escalonamento.", deliverables: ["Dashboard", "Reports"] },
-    ],
-
-    // Form
-    formActionUrl,
-    hiddenPlano: mainPlan.name,
-    hiddenProposta: editedData.companyName,
-  }
-
-  const html = renderProposal(content)
   return { html }
 }
