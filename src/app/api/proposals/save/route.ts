@@ -13,6 +13,7 @@ interface ProposalMeta {
   setupPrice: number
   status: string
   createdAt: string
+  expiresAt: string
 }
 
 function loadIndex(): ProposalMeta[] {
@@ -30,7 +31,7 @@ function saveIndex(index: ProposalMeta[]) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { slug, html, companyName, planName, planPrice, setupPrice } = await request.json()
+    const { slug, html, companyName, planName, planPrice, setupPrice, expiresAt } = await request.json()
 
     if (!slug || !html) {
       return NextResponse.json(
@@ -61,6 +62,7 @@ export async function POST(request: NextRequest) {
       setupPrice: setupPrice || 0,
       status: "review",
       createdAt: new Date().toISOString(),
+      expiresAt: expiresAt || new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
     })
     saveIndex(index)
 

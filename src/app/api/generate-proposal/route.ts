@@ -42,10 +42,13 @@ export async function POST(request: NextRequest) {
       planPrice: mainPlan.price,
       setupPrice: mainPlan.setup,
     })
-  } catch (error) {
-    console.error("Generation error:", error)
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error)
+    const stack = error instanceof Error ? error.stack : ""
+    console.error("Generation error:", msg)
+    console.error("Stack:", stack)
     return NextResponse.json(
-      { error: "Erro ao gerar proposta. Tente novamente." },
+      { error: `Erro ao gerar proposta: ${msg}` },
       { status: 500 }
     )
   }

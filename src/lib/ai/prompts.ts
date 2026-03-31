@@ -138,17 +138,14 @@ Retorne APENAS um JSON valido (sem markdown code fences) com esta estrutura:
 {
   "hero": {
     "monthYear": "MES ANO em maiusculas (ex: MARCO 2026)",
-    "companyName": "Nome da empresa",
     "tagline": "Frase de impacto sobre o prospect (1-2 linhas)",
-    "expiryDate": "DD DE MES DE ANO em maiusculas",
-    "contactName": "Nome do contato",
-    "location": "Cidade / Estado"
+    "expiryDate": "DD DE MES DE ANO em maiusculas"
   },
   "truth": {
     "headline": "Verdade inconveniente em 1-2 frases impactantes",
     "quote": "Citacao provocativa usando palavras do prospect da call",
     "cards": [
-      {"eyebrow": "TEMA", "title": "Titulo impactante (4-8 palavras)", "description": "Descricao detalhada (2-3 frases)"},
+      {"eyebrow": "TEMA EM MAIUSCULAS", "title": "Titulo impactante (4-8 palavras)", "description": "Descricao detalhada (2-3 frases)"},
       {"eyebrow": "TEMA", "title": "Titulo impactante", "description": "Descricao detalhada"},
       {"eyebrow": "TEMA", "title": "Titulo impactante", "description": "Descricao detalhada"}
     ]
@@ -156,22 +153,25 @@ Retorne APENAS um JSON valido (sem markdown code fences) com esta estrutura:
   "solution": {
     "headline": "Headline da solucao (pode usar <br> para quebra)",
     "description": "Descricao da solucao em 2-3 frases",
-    "cards": [
+    "services": [
       {"title": "Nome do servico/entrega", "description": "O que entregamos (1-2 frases)"},
       {"title": "Nome do servico/entrega", "description": "O que entregamos"},
       {"title": "Nome do servico/entrega", "description": "O que entregamos"},
       {"title": "Nome do servico/entrega", "description": "O que entregamos"},
       {"title": "Nome do servico/entrega", "description": "O que entregamos"}
     ],
-    "teamBadges": ["Badge 1", "Badge 2", "Badge 3", "Badge 4", "Badge 5"]
+    "badges": ["Especialidade 1", "Especialidade 2", "Especialidade 3", "Especialidade 4", "Especialidade 5", "Especialidade 6", "Especialidade 7", "Especialidade 8"]
   },
-  "cosmos": {
+  "delivery": {
     "cards": [
-      {"badge": "ETAPA 01 / 05", "title": "Imersao e Diagnostico", "description": "Descricao da etapa (2-3 frases)", "deliverable": "Entregavel principal da etapa"},
-      {"badge": "ETAPA 02 / 05", "title": "Titulo", "description": "Descricao", "deliverable": "Entregavel"},
-      {"badge": "ETAPA 03 / 05", "title": "Titulo", "description": "Descricao", "deliverable": "Entregavel"},
-      {"badge": "ETAPA 04 / 05", "title": "Titulo", "description": "Descricao", "deliverable": "Entregavel"},
-      {"badge": "ETAPA 05 / 05", "title": "Titulo", "description": "Descricao", "deliverable": "Entregavel"}
+      {"tag": "ETAPA 01", "title": "Nome do entregavel", "description": "O que o cliente recebe (1-2 frases)"},
+      {"tag": "ETAPA 02", "title": "Titulo", "description": "Descricao"},
+      {"tag": "ETAPA 03", "title": "Titulo", "description": "Descricao"},
+      {"tag": "ETAPA 04", "title": "Titulo", "description": "Descricao"},
+      {"tag": "ETAPA 05", "title": "Titulo", "description": "Descricao"},
+      {"tag": "ETAPA 06", "title": "Titulo", "description": "Descricao"},
+      {"tag": "ETAPA 07", "title": "Titulo", "description": "Descricao"},
+      {"tag": "ETAPA 08", "title": "Titulo", "description": "Descricao"}
     ]
   },
   "credibility": {
@@ -183,19 +183,28 @@ Retorne APENAS um JSON valido (sem markdown code fences) com esta estrutura:
     ]
   },
   "investment": {
-    "anchorRows": [
-      {"service": "Nome do servico", "marketPrice": "R$ X.XXX/mes"}
+    "anchors": [
+      {"service": "Nome do servico no mercado", "price": "R$ X.XXX/mes"},
+      {"service": "Segundo servico", "price": "R$ X.XXX/mes"}
     ],
     "anchorTotal": "R$ XX.XXX/mes",
-    "planName": "NOME DO PLANO",
-    "planPrice": "R$ X.XXX",
-    "planPeriod": "/mes",
     "savingsText": "Economia de R$ X.XXX/mes (XX%)",
-    "features": ["Feature 1 incluida", "Feature 2 incluida"],
+    "discountLabel": "XX% abaixo do mercado",
+    "inclusos": ["Incluso 1", "Incluso 2", "Incluso 3", "Incluso 4", "Incluso 5", "Incluso 6", "Incluso 7", "Incluso 8"],
     "setupOriginal": "R$ X.XXX",
-    "setupDiscount": "R$ X.XXX",
+    "setupDiscounted": "R$ X.XXX",
+    "setupDiscountBadge": "XX% OFF SETUP",
     "setupInstallments": "ou Xx de R$ XXX",
-    "scarcityText": "Texto de escassez real (capacidade limitada, vagas)"
+    "setupDescription": "Descricao breve do que o setup inclui",
+    "scarcityText": "Texto de escassez real (capacidade limitada, vagas)",
+    "scarcityTextCta": "Texto de escassez para o CTA final",
+    "planAFeatures": ["Feature 1 do plano A", "Feature 2", "Feature 3", "Feature 4", "Feature 5"],
+    "planBFeatures": ["Feature 1 do plano B", "Feature 2", "Feature 3", "Feature 4", "Feature 5", "Feature 6"],
+    "planCFeatures": ["Feature 1 do plano C", "Feature 2", "Feature 3", "Feature 4", "Feature 5", "Feature 6"],
+    "planBSetupDiscount": "Setup GRATIS",
+    "compareRows": [
+      {"label": "Recurso comparado", "a": "Basico", "b": "Completo", "c": "Premium"}
+    ]
   },
   "roadmap": {
     "items": [
@@ -204,8 +213,23 @@ Retorne APENAS um JSON valido (sem markdown code fences) com esta estrutura:
       {"marker": "SEMANA 4", "title": "Titulo", "description": "Descricao", "deliverables": ["Entrega"]},
       {"marker": "MES 2+", "title": "Titulo", "description": "Descricao", "deliverables": ["Entrega"]}
     ]
+  },
+  "cta": {
+    "headline": "Vamos comecar?",
+    "subtitle": "Frase de fechamento persuasiva (1-2 linhas)",
+    "expiryText": "Condicoes validas ate DD de Mes de AAAA"
   }
-}`
+}
+
+IMPORTANTE para template tipo-b (3 planos):
+- Gere planAFeatures, planBFeatures, planCFeatures e compareRows dentro de investment
+- Gere planBSetupDiscount (ex: "Setup GRATIS" ou "50% OFF Setup")
+- compareRows deve ter 6-8 linhas comparando os 3 planos
+
+IMPORTANTE para template tipo-a (1 plano):
+- Gere anchors (6-8 servicos com precos de mercado para ancoragem)
+- Gere inclusos (6-8 itens inclusos no plano)
+- NAO precisa gerar planAFeatures/planBFeatures/planCFeatures/compareRows`
 }
 
 export function getBodyPrompt(): string {

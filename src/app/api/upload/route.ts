@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server"
-import { extractText } from "unpdf"
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,15 +9,25 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Nenhum arquivo enviado" }, { status: 400 })
     }
 
+    console.log("[upload] Arquivo recebido:", file.name, "tipo:", file.type, "tamanho:", file.size)
+
     const buffer = Buffer.from(await file.arrayBuffer())
     let text = ""
 
     if (file.name.toLowerCase().endsWith(".pdf")) {
-      const result = await extractText(new Uint8Array(buffer))
-      // result.text is an array of strings (one per page)
-      text = Array.isArray(result.text)
-        ? result.text.join("\n\n")
-        : String(result.text)
+      try {
+        const { extractText } = await import("unpdf")
+        const result = await extractText(new Uint8Array(buffer))
+        text = Array.isArray(result.text)
+          ? result.text.join("\n\n")
+          : String(result.text)
+      } catch (pdfError) {
+        console.error("[upload] Erro ao extrair PDF:", pdfError)
+        return NextResponse.json(
+          { error: "Nao foi possivel ler o PDF. Tente salvar como .txt ou cole o texto diretamente." },
+          { status: 400 }
+        )
+      }
     } else {
       text = buffer.toString("utf-8")
     }
@@ -36,13 +45,15 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    console.log("[upload] Texto extraido com sucesso:", text.length, "caracteres")
+
     return NextResponse.json({
       text,
       fileName: file.name,
       characters: text.length,
     })
   } catch (error) {
-    console.error("Upload error:", error)
+    console.error("[upload] Erro geral:", error)
     return NextResponse.json(
       { error: "Erro ao processar arquivo. Tente um formato .txt ou cole diretamente." },
       { status: 500 }

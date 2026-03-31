@@ -14,8 +14,6 @@ import {
   Loader2,
   FileText,
   Check,
-  ChevronDown,
-  ChevronUp,
   Building2,
   Pencil,
 } from "lucide-react"
@@ -191,7 +189,6 @@ export function AnalysisResults({
   // Planos
   const [selectedPlans, setSelectedPlans] = useState<string[]>([data.recommendedPlan])
   const [proposalType, setProposalType] = useState<"single" | "multiple">("single")
-  const [showAllPlans, setShowAllPlans] = useState(false)
 
   function togglePlan(planName: string) {
     if (proposalType === "single") {
@@ -461,132 +458,58 @@ export function AnalysisResults({
             </button>
           </div>
 
-          {/* Plano recomendado */}
+          {/* Todos os planos */}
           <div>
-            <p className="text-xs font-medium text-[#E13F07]/70 mb-2">RECOMENDADO PELA ANALISE</p>
-            {PLANS_CATALOG.filter(p => p.name === data.recommendedPlan).map((plan) => (
-              <button
-                key={plan.name}
-                type="button"
-                onClick={() => togglePlan(plan.name)}
-                className={`flex w-full items-start gap-3 rounded-lg border-2 p-4 text-left transition-colors ${
-                  selectedPlans.includes(plan.name)
-                    ? "border-[#E13F07]/50 bg-[#E13F07]/5"
-                    : "border-neutral-700"
-                }`}
-              >
-                <div className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
-                  selectedPlans.includes(plan.name)
-                    ? "border-[#E13F07] bg-[#E13F07]"
-                    : "border-neutral-600"
-                }`}>
-                  {selectedPlans.includes(plan.name) && <Check className="h-3 w-3 text-white" />}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-bold">{plan.name}</span>
-                    <Badge variant="hot" className="text-[10px]">Recomendado</Badge>
-                  </div>
-                  <p className="text-sm text-neutral-300 mt-0.5">
-                    {plan.type === "one-shot"
-                      ? formatCurrency(plan.price) + " (pagamento unico)"
-                      : formatCurrency(plan.price) + "/mes + Setup " + formatCurrency(plan.setup)}
-                  </p>
-                  <p className="text-xs text-neutral-500 mt-1">{plan.description}</p>
-                  <span className="text-[10px] text-neutral-600">Faixa: {plan.target}</span>
-                </div>
-              </button>
-            ))}
-          </div>
-
-          {/* Alternativa */}
-          {data.alternativePlan && data.alternativePlan !== data.recommendedPlan && (
-            <div>
-              <p className="text-xs font-medium text-neutral-500 mb-2">ALTERNATIVA SUGERIDA</p>
-              {PLANS_CATALOG.filter(p => p.name === data.alternativePlan).map((plan) => (
-                <button
-                  key={plan.name}
-                  type="button"
-                  onClick={() => togglePlan(plan.name)}
-                  className={`flex w-full items-start gap-3 rounded-lg border p-4 text-left transition-colors ${
-                    selectedPlans.includes(plan.name)
-                      ? "border-blue-800/40 bg-blue-950/10"
-                      : "border-neutral-800"
-                  }`}
-                >
-                  <div className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
-                    selectedPlans.includes(plan.name)
-                      ? "border-blue-500 bg-blue-500"
-                      : "border-neutral-600"
-                  }`}>
-                    {selectedPlans.includes(plan.name) && <Check className="h-3 w-3 text-white" />}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <span className="font-bold">{plan.name}</span>
-                    <p className="text-sm text-neutral-300 mt-0.5">
-                      {plan.type === "one-shot"
-                        ? formatCurrency(plan.price) + " (pagamento unico)"
-                        : formatCurrency(plan.price) + "/mes + Setup " + formatCurrency(plan.setup)}
-                    </p>
-                    <p className="text-xs text-neutral-500 mt-1">{plan.description}</p>
-                    <span className="text-[10px] text-neutral-600">Faixa: {plan.target}</span>
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Ver todos os planos */}
-          <button
-            type="button"
-            onClick={() => setShowAllPlans(!showAllPlans)}
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-neutral-800 py-2 text-sm text-neutral-400 hover:bg-neutral-900 transition-colors"
-          >
-            {showAllPlans ? (
-              <>Ocultar outros planos <ChevronUp className="h-4 w-4" /></>
-            ) : (
-              <>Ver todos os {PLANS_CATALOG.length} planos <ChevronDown className="h-4 w-4" /></>
-            )}
-          </button>
-
-          {showAllPlans && (
+            <p className="text-xs font-medium text-neutral-500 mb-3">
+              ESCOLHA {proposalType === "single" ? "O PLANO" : "OS PLANOS"} PARA A PROPOSTA
+            </p>
             <div className="space-y-2">
-              {PLANS_CATALOG.filter(
-                (p) => p.name !== data.recommendedPlan && p.name !== data.alternativePlan
-              ).map((plan) => (
-                <button
-                  key={plan.name}
-                  type="button"
-                  onClick={() => togglePlan(plan.name)}
-                  className={`flex w-full items-start gap-3 rounded-lg border p-3 text-left transition-colors ${
-                    selectedPlans.includes(plan.name)
-                      ? "border-neutral-600 bg-neutral-900"
-                      : "border-neutral-800/50 opacity-70 hover:opacity-100"
-                  }`}
-                >
-                  <div className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
-                    selectedPlans.includes(plan.name)
-                      ? "border-white bg-white"
-                      : "border-neutral-700"
-                  }`}>
-                    {selectedPlans.includes(plan.name) && <Check className="h-3 w-3 text-black" />}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-baseline gap-2 flex-wrap">
-                      <span className="font-semibold text-sm">{plan.name}</span>
-                      <span className="text-xs text-neutral-500">
-                        {plan.type === "one-shot"
-                          ? formatCurrency(plan.price) + " (unico)"
-                          : formatCurrency(plan.price) + "/mes"}
-                      </span>
-                      <span className="text-[10px] text-neutral-600">{plan.target}</span>
+              {PLANS_CATALOG.map((plan) => {
+                const isSelected = selectedPlans.includes(plan.name)
+                const isRecommended = plan.name === data.recommendedPlan
+                const isAlternative = plan.name === data.alternativePlan
+
+                return (
+                  <button
+                    key={plan.name}
+                    type="button"
+                    onClick={() => togglePlan(plan.name)}
+                    className={`flex w-full items-start gap-3 rounded-lg border-2 p-4 text-left transition-colors ${
+                      isSelected
+                        ? "border-[#E13F07]/50 bg-[#E13F07]/5"
+                        : "border-neutral-800 hover:border-neutral-600"
+                    }`}
+                  >
+                    <div className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
+                      isSelected
+                        ? "border-[#E13F07] bg-[#E13F07]"
+                        : "border-neutral-600"
+                    }`}>
+                      {isSelected && <Check className="h-3 w-3 text-white" />}
                     </div>
-                    <p className="text-xs text-neutral-500 mt-0.5">{plan.description}</p>
-                  </div>
-                </button>
-              ))}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-bold">{plan.name}</span>
+                        {isRecommended && (
+                          <Badge variant="hot" className="text-[10px]">Sugestao IA</Badge>
+                        )}
+                        {isAlternative && (
+                          <Badge variant="secondary" className="text-[10px]">Alternativa IA</Badge>
+                        )}
+                      </div>
+                      <p className="text-sm text-neutral-300 mt-0.5">
+                        {plan.type === "one-shot"
+                          ? formatCurrency(plan.price) + " (pagamento unico)"
+                          : formatCurrency(plan.price) + "/mes + Setup " + formatCurrency(plan.setup)}
+                      </p>
+                      <p className="text-xs text-neutral-500 mt-1">{plan.description}</p>
+                      <span className="text-[10px] text-neutral-600">Faixa: {plan.target}</span>
+                    </div>
+                  </button>
+                )
+              })}
             </div>
-          )}
+          </div>
 
           {/* Resumo da selecao */}
           {selectedPlans.length > 0 && (
