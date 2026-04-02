@@ -35,6 +35,12 @@ ${personas}
 
 # INSTRUCOES DE OUTPUT
 
+IMPORTANTE: Os campos "recommendedPlan" e "alternativePlan" DEVEM ser EXATAMENTE um destes valores:
+"IGNITION", "START", "PRO", "ADVANCED", "SOCIAL-PRO", "PERF PRO + SOCIAL", "PERF PRO + SOCIAL + AV", "DIAMOND"
+
+NAO invente combinacoes de planos. NAO use prefixo "TRAFEGO". Use o nome EXATO da lista acima.
+Se nenhum plano se encaixa perfeitamente, escolha o mais proximo. NUNCA invente um nome que nao esta na lista.
+
 Voce DEVE retornar um JSON valido com a seguinte estrutura (sem markdown code fences, apenas JSON puro):
 
 {

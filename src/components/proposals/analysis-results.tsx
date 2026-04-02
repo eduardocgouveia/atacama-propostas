@@ -25,6 +25,7 @@ interface AnalysisResultsProps {
   analysis: AnalysisResult
   onGenerate: (data: EditedProposalData) => void
   generating: boolean
+  initialData?: EditedProposalData
 }
 
 const PLANS_CATALOG = [
@@ -94,6 +95,31 @@ const PLANS_CATALOG = [
   },
 ]
 
+// Normaliza nomes de planos retornados pela IA para bater com o catalogo
+function normalizePlanName(name: string): string {
+  if (!name) return ""
+  const normalized = name.toUpperCase().trim()
+  const ALIASES: Record<string, string> = {
+    "TRAFEGO START": "START",
+    "TRÁFEGO START": "START",
+    "TRAFEGO PRO": "PRO",
+    "TRÁFEGO PRO": "PRO",
+    "TRAFEGO ADVANCED": "ADVANCED",
+    "TRÁFEGO ADVANCED": "ADVANCED",
+    "SOCIAL PRO": "SOCIAL-PRO",
+    "PERFORMANCE PRO + SOCIAL": "PERF PRO + SOCIAL",
+    "PERFORMANCE PRO + SOCIAL MEDIA": "PERF PRO + SOCIAL",
+    "PERFORMANCE PRO + SOCIAL + AUDIOVISUAL": "PERF PRO + SOCIAL + AV",
+    "PERFORMANCE PRO + SOCIAL + AV": "PERF PRO + SOCIAL + AV",
+  }
+  if (ALIASES[normalized]) return ALIASES[normalized]
+  const exact = PLANS_CATALOG.find((p) => p.name.toUpperCase() === normalized)
+  if (exact) return exact.name
+  const partial = PLANS_CATALOG.find((p) => normalized.includes(p.name.toUpperCase()))
+  if (partial) return partial.name
+  return ""
+}
+
 function getTemperatureBadgeVariant(temp: string) {
   switch (temp) {
     case "HOT": return "hot" as const
@@ -161,34 +187,49 @@ export function AnalysisResults({
   analysis,
   onGenerate,
   generating,
+  initialData,
 }: AnalysisResultsProps) {
   const { prospect, analysis: data } = analysis
 
+  // Se tem initialData (edicao), usar esses valores. Senao, usar os da analise.
+  const init = initialData
+
   // Estado editavel do prospect
-  const [companyName, setCompanyName] = useState(prospect.companyName || "")
-  const [contactName, setContactName] = useState(prospect.contactName || "")
-  const [sector, setSector] = useState(prospect.sector || "")
+  const [companyName, setCompanyName] = useState(init?.companyName || prospect.companyName || "")
+  const [contactName, setContactName] = useState(init?.contactName || prospect.contactName || "")
+  const [sector, setSector] = useState(init?.sector || prospect.sector || "")
   const [location, setLocation] = useState(
-    prospect.city && prospect.state ? `${prospect.city}/${prospect.state}` : ""
+    init?.location || (prospect.city && prospect.state ? `${prospect.city}/${prospect.state}` : "")
   )
-  const [revenue, setRevenue] = useState(prospect.estimatedRevenue || "")
+  const [revenue, setRevenue] = useState(init?.revenue || prospect.estimatedRevenue || "")
 
   // Estado editavel da analise
-  const [goals, setGoals] = useState(data.gpct.goals || "")
-  const [plans, setPlans] = useState(data.gpct.plans || "")
-  const [timeline, setTimeline] = useState(data.gpct.timeline || "")
-  const [challenges, setChallenges] = useState(data.gpct.challenges || "")
-  const [inconvenientTruth, setInconvenientTruth] = useState(data.inconvenientTruth || "")
-  const [diagnosis, setDiagnosis] = useState(data.diagnosis || "")
+  const [goals, setGoals] = useState(init?.goals || data.gpct.goals || "")
+  const [plans, setPlans] = useState(init?.plans || data.gpct.plans || "")
+  const [timeline, setTimeline] = useState(init?.timeline || data.gpct.timeline || "")
+  const [challenges, setChallenges] = useState(init?.challenges || data.gpct.challenges || "")
+  const [inconvenientTruth, setInconvenientTruth] = useState(init?.inconvenientTruth || data.inconvenientTruth || "")
+  const [diagnosis, setDiagnosis] = useState(init?.diagnosis || data.diagnosis || "")
 
   // Dores selecionaveis e editaveis
   const [pains, setPains] = useState(
-    (data.keyObjections || []).map((obj) => ({ text: obj, selected: true }))
+    init?.selectedPains
+      ? init.selectedPains.map((text) => ({ text, selected: true }))
+      : (data.keyObjections || []).map((obj) => ({ text: obj, selected: true }))
   )
 
-  // Planos
-  const [selectedPlans, setSelectedPlans] = useState<string[]>([data.recommendedPlan])
-  const [proposalType, setProposalType] = useState<"single" | "multiple">("single")
+  // Planos — se editando, usar planos selecionados anteriormente
+  const normalizedRecommended = normalizePlanName(data.recommendedPlan)
+  const initialSelectedPlans = init?.selectedPlans?.map((p) => p.name).filter((n) => PLANS_CATALOG.some((c) => c.name === n))
+  const [selectedPlans, setSelectedPlans] = useState<string[]>(
+    initialSelectedPlans && initialSelectedPlans.length > 0
+      ? initialSelectedPlans
+      : normalizedRecommended ? [normalizedRecommended] : []
+  )
+  const [proposalType, setProposalType] = useState<"single" | "multiple">(
+    init?.proposalType || "single"
+  )
+  const aiPlanNotRecognized = data.recommendedPlan && !normalizedRecommended
 
   function togglePlan(planName: string) {
     if (proposalType === "single") {
@@ -211,10 +252,11 @@ export function AnalysisResults({
   }
 
   function handleGenerate() {
-    const plansData = selectedPlans.map((name) => {
-      const catalog = PLANS_CATALOG.find((p) => p.name === name)
-      return catalog || { name, price: 0, setup: 0, type: "recorrente" as const, description: "", target: "" }
-    })
+    const plansData = selectedPlans
+      .map((name) => PLANS_CATALOG.find((p) => p.name === name))
+      .filter((p): p is (typeof PLANS_CATALOG)[number] => p !== undefined)
+
+    if (plansData.length === 0) return
 
     const editedData: EditedProposalData = {
       companyName,
@@ -433,7 +475,7 @@ export function AnalysisResults({
               type="button"
               onClick={() => {
                 setProposalType("single")
-                setSelectedPlans([selectedPlans[0] || data.recommendedPlan])
+                setSelectedPlans([selectedPlans[0] || normalizedRecommended])
               }}
               className={`flex-1 rounded-lg border p-3 text-center text-sm font-medium transition-colors ${
                 proposalType === "single"
@@ -458,6 +500,13 @@ export function AnalysisResults({
             </button>
           </div>
 
+          {/* Alerta se a IA sugeriu plano invalido */}
+          {aiPlanNotRecognized && (
+            <div className="rounded-lg border border-amber-800/50 bg-amber-950/20 p-3 text-sm text-amber-400">
+              <span className="font-medium">A IA sugeriu &quot;{data.recommendedPlan}&quot;</span>, que nao existe no catalogo. Selecione manualmente o plano correto abaixo.
+            </div>
+          )}
+
           {/* Todos os planos */}
           <div>
             <p className="text-xs font-medium text-neutral-500 mb-3">
@@ -466,8 +515,9 @@ export function AnalysisResults({
             <div className="space-y-2">
               {PLANS_CATALOG.map((plan) => {
                 const isSelected = selectedPlans.includes(plan.name)
-                const isRecommended = plan.name === data.recommendedPlan
-                const isAlternative = plan.name === data.alternativePlan
+                const isRecommended = plan.name === normalizedRecommended
+                const normalizedAlternative = normalizePlanName(data.alternativePlan)
+                const isAlternative = plan.name === normalizedAlternative
 
                 return (
                   <button

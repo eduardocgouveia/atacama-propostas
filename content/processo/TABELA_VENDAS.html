@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tabela Comercial / Atacama Digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Unicase:wght@500;600;700&family=Inter+Tight:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #000; --fg: #fff; --card: #1A1A1A; --card-alt: #222;
+    --border: rgba(255,255,255,0.12); --border-hover: rgba(255,255,255,0.3);
+    --muted: #959595; --muted-light: #C4C4C4; --silver: #DBDCDD;
+    --orange: #E13F07; --orange-glow: rgba(225,63,7,0.15); --orange-text: #ff6b3d;
+    --green: #4ade80; --red: #ef4444;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter Tight',system-ui,sans-serif; background:var(--bg); color:var(--fg); line-height:1.6; -webkit-font-smoothing:antialiased; }
+  .container { max-width:1280px; margin:0 auto; padding:0 32px; }
+  a { color:var(--fg); text-decoration:none; }
+
+  /* HERO */
+  .hero { padding:80px 0 48px; text-align:center; position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; top:-40%; left:50%; transform:translateX(-50%); width:600px; height:600px; background:radial-gradient(circle,var(--orange-glow) 0%,transparent 70%); pointer-events:none; z-index:0; }
+  .hero > * { position:relative; z-index:1; }
+  .hero .logo-wrap { margin-bottom:32px; }
+  .hero .logo-wrap svg { height:48px; width:auto; color:var(--fg); }
+  .hero .eyebrow { font-size:11px; font-weight:400; letter-spacing:0.25em; text-transform:uppercase; color:var(--muted); margin-bottom:16px; }
+  .hero h1 { font-family:'Cormorant Unicase',Georgia,serif; font-weight:600; font-size:clamp(2rem,5vw,3.2rem); letter-spacing:-0.025em; line-height:0.95; margin-bottom:16px; }
+  .hero .subtitle { font-size:16px; color:var(--muted-light); max-width:540px; margin:0 auto; }
+  .hero .date { font-size:12px; color:var(--muted); margin-top:24px; }
+
+  /* SECTIONS */
+  section { padding:64px 0; }
+  section.alt { background:var(--card); }
+  .section-title { font-size:11px; font-weight:400; letter-spacing:0.25em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+  .section-heading { font-family:'Cormorant Unicase',Georgia,serif; font-weight:600; font-size:clamp(1.5rem,3vw,2rem); letter-spacing:-0.025em; line-height:0.95; margin-bottom:12px; }
+  .section-desc { font-size:14px; color:var(--muted-light); margin-bottom:32px; max-width:640px; }
+
+  /* FAMILY LABEL */
+  .family-label { display:flex; align-items:center; gap:12px; margin:40px 0 20px; }
+  .family-label:first-of-type { margin-top:0; }
+  .family-label .family-line { flex:1; height:1px; background:var(--border); }
+  .family-label .family-text { font-size:11px; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); white-space:nowrap; }
+
+  /* PLAN CARDS */
+  .plans-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
+  .plan-card { background:var(--card-alt); border:1px solid var(--border); border-radius:8px; padding:24px; transition:border-color .3s,transform .3s; position:relative; cursor:pointer; }
+  .plan-card:hover { border-color:var(--border-hover); transform:translateY(-2px); }
+  .plan-card .plan-number { font-size:11px; letter-spacing:0.25em; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+  .plan-card .plan-name { font-size:18px; font-weight:700; margin-bottom:8px; line-height:1.2; }
+  .plan-card .plan-price { font-size:28px; font-weight:400; margin-bottom:2px; font-variant-numeric:tabular-nums; }
+  .plan-card .plan-price small { font-size:14px; color:var(--muted); }
+  .plan-card .plan-setup { font-size:13px; color:var(--muted); margin-bottom:4px; }
+  .plan-card .plan-discount { font-size:12px; color:var(--orange-text); margin-bottom:16px; }
+  .plan-card .plan-divider { height:1px; background:var(--border); margin:16px 0; }
+  .plan-card .plan-meta { font-size:13px; color:var(--muted-light); line-height:1.5; }
+  .plan-card .plan-meta strong { color:var(--fg); font-weight:600; }
+  .plan-card .plan-tag { display:inline-block; font-size:10px; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; padding:3px 8px; border-radius:3px; background:rgba(255,255,255,0.08); color:var(--muted-light); margin-bottom:12px; }
+  .plan-card .plan-tag.best-seller { background:var(--orange-glow); color:var(--orange-text); }
+  .plan-card .plan-tag.ignition { background:rgba(255,255,255,0.06); color:var(--muted); }
+  .plan-card .plan-tag.custom { background:rgba(255,255,255,0.04); color:var(--muted); border:1px dashed rgba(255,255,255,0.15); }
+  .plan-card .plan-pitch { font-size:13px; font-style:italic; color:var(--muted); margin-top:12px; line-height:1.5; }
+  .plan-card .plan-arrow { font-size:12px; color:var(--muted); margin-top:12px; }
+  .plan-card .plan-arrow span { color:var(--fg); font-weight:500; }
+  .plan-card .click-hint { font-size:11px; color:var(--muted); margin-top:16px; text-align:center; opacity:0; transition:opacity .3s; }
+  .plan-card:hover .click-hint { opacity:1; }
+
+  /* MODAL */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:1000; justify-content:center; align-items:flex-start; padding:40px 16px; overflow-y:auto; }
+  .modal-overlay.active { display:flex; }
+  .modal { background:#111; border:1px solid var(--border); border-radius:12px; max-width:720px; width:100%; padding:40px; position:relative; animation:modalIn .3s ease; }
+  @keyframes modalIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+  .modal-close { position:absolute; top:16px; right:16px; background:none; border:none; color:var(--muted); font-size:24px; cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:6px; transition:background .2s; }
+  .modal-close:hover { background:rgba(255,255,255,0.1); color:var(--fg); }
+  .modal .modal-tag { font-size:10px; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+  .modal h3 { font-size:24px; font-weight:700; margin-bottom:4px; }
+  .modal .modal-price { font-size:32px; font-weight:400; margin-bottom:4px; font-variant-numeric:tabular-nums; }
+  .modal .modal-price small { font-size:14px; color:var(--muted); }
+  .modal .modal-discount { font-size:13px; color:var(--orange-text); margin-bottom:24px; }
+  .modal .modal-section-title { font-size:12px; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin:24px 0 12px; }
+  .modal .modal-list { list-style:none; }
+  .modal .modal-list li { font-size:14px; padding:6px 0; display:flex; align-items:flex-start; gap:8px; }
+  .modal .modal-list li .icon { flex-shrink:0; width:18px; text-align:center; }
+  .modal .modal-list .check { color:var(--green); }
+  .modal .modal-list .cross { color:var(--red); opacity:0.5; }
+  .modal .modal-list .cross-text { color:var(--muted); }
+  .modal .modal-footer { margin-top:24px; padding-top:16px; border-top:1px solid var(--border); font-size:13px; color:var(--muted-light); }
+
+  /* TABLE */
+  .table-wrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  table th { text-align:left; font-size:11px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); padding:12px 16px; border-bottom:1px solid var(--border); white-space:nowrap; }
+  table td { padding:14px 16px; border-bottom:1px solid rgba(255,255,255,0.06); vertical-align:top; }
+  table tr:hover td { background:rgba(255,255,255,0.03); }
+  .plan-col { font-weight:600; white-space:nowrap; }
+  .price-col { font-variant-numeric:tabular-nums; white-space:nowrap; }
+
+  /* TREE */
+  .tree { background:var(--card-alt); border:1px solid var(--border); border-radius:8px; padding:32px; }
+  .tree-question { font-size:15px; font-weight:600; margin-bottom:12px; }
+  .tree-options { display:flex; flex-direction:column; gap:8px; padding-left:20px; border-left:2px solid var(--border); }
+  .tree-option { display:flex; align-items:flex-start; gap:8px; font-size:14px; }
+  .tree-option .arrow { color:var(--muted); flex-shrink:0; }
+  .tree-option .result { font-weight:600; }
+  .tree-option .condition { color:var(--muted-light); }
+  .tree-sub { margin-top:8px; padding-left:20px; border-left:2px solid rgba(255,255,255,0.06); }
+
+  /* OBJECTIONS */
+  .objections-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(360px,1fr)); gap:16px; }
+  .objection-card { background:var(--card-alt); border:1px solid var(--border); border-radius:8px; padding:24px; transition:border-color .3s; }
+  .objection-card:hover { border-color:var(--border-hover); }
+  .objection-card .objection-q { font-size:16px; font-weight:600; margin-bottom:12px; }
+  .objection-card .objection-a { font-size:14px; color:var(--muted-light); line-height:1.6; }
+
+  /* RULES */
+  .rules-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px; }
+  .rule-card { background:var(--card-alt); border:1px solid var(--border); border-radius:8px; padding:20px; }
+  .rule-card .rule-label { font-size:12px; font-weight:500; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:6px; }
+  .rule-card .rule-value { font-size:15px; font-weight:500; line-height:1.4; }
+
+  /* TEAM */
+  .team-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; }
+  .team-card { background:var(--card-alt); border:1px solid var(--border); border-radius:8px; padding:16px 20px; display:flex; justify-content:space-between; align-items:center; gap:16px; }
+  .team-card .team-plan { font-weight:600; font-size:14px; white-space:nowrap; }
+  .team-card .team-members { font-size:13px; color:var(--muted-light); text-align:right; }
+
+  /* CASES */
+  .cases-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
+  .case-card { background:var(--card-alt); border:1px solid var(--border); border-radius:8px; padding:24px; transition:border-color .3s; }
+  .case-card:hover { border-color:var(--border-hover); }
+  .case-card .case-tag { font-size:10px; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+  .case-card .case-name { font-size:16px; font-weight:700; margin-bottom:8px; }
+  .case-card .case-number { font-size:36px; font-weight:800; line-height:1; margin-bottom:8px; font-variant-numeric:tabular-nums; }
+  .case-card .case-desc { font-size:13px; color:var(--muted-light); line-height:1.5; }
+
+  /* FOOTER */
+  footer { padding:64px 0; text-align:center; }
+  footer .footer-logo svg { height:32px; width:auto; color:var(--fg); margin-bottom:16px; }
+  footer .footer-tagline { font-size:13px; color:var(--muted); font-style:italic; }
+  footer .footer-coords { font-size:10px; color:var(--muted); letter-spacing:0.15em; margin-top:16px; }
+
+  /* RESPONSIVE */
+  @media (max-width:768px) {
+    .container { padding:0 16px; }
+    section { padding:40px 0; }
+    .hero { padding:48px 0 32px; }
+    .plans-grid,.objections-grid,.rules-grid,.team-grid,.cases-grid { grid-template-columns:1fr; }
+    .modal { padding:24px; }
+  }
+
+  @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+  .fade-up { animation:fadeUp .6s ease forwards; opacity:0; }
+  .fade-up:nth-child(1) { animation-delay:.1s; }
+  .fade-up:nth-child(2) { animation-delay:.2s; }
+  .fade-up:nth-child(3) { animation-delay:.3s; }
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="container">
+    <div class="logo-wrap fade-up">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 7440 1990" fill="currentColor">
+        <path d="m2005.83 38.68-307.87 1154h217.33L2217.95 58.23l302.65 1134.45h217.34l-307.87-1154ZM333.85 38.68l-307.87 1154h217.34L545.97 58.23l302.66 1134.45h217.33L758.1 38.68ZM4201.22 38.68l-307.87 1154h217.34L4413.34 58.23 4716 1192.68h217.34l-307.88-1154ZM1789.08 38.68H986.93V233h292.17v959.67h216.6V233.01h293.38ZM6686.55 38.68l-307.87 1154h217.34L6898.68 58.23l302.65 1134.45h217.34l-307.87-1154ZM5666.44 669.03 5490.98 38.7l-424.07-.03v1154h216.61V76.19l170.24 611.58h425.36l170.24-611.58v1116.49h216.6v-1154l-424.06.03ZM3524.06 969.29c-57.57 37.2-122.85 54.25-184.81 54.25-70.32 0-135.16-17.8-192.72-52.89-118.62-72.31-186.66-201.97-186.66-355.72 0-217.76 130.5-319.58 186.6-353.25 57.61-34.59 122.47-52.12 192.78-52.12 6.32 0 98.34.97 184.8 52.06 117.68 69.54 140.24 189.95 140.24 189.95h216.55c0-.02-8.62-118.66-96.5-230.45-102.2-130-264.43-204.57-445.1-204.57-108.53 0-208.94 26.43-298.4 78.57-85.13 49.6-156.39 120.44-206.07 204.88-54.76 93.06-82.53 199.02-82.53 314.93 0 220.57 107.87 415.8 288.55 522.21 89.45 52.7 189.87 79.41 298.46 79.41 177.7 0 341.62-77.36 443.55-210.35 87.52-114.2 101.64-240.9 101.64-240.9h-218.88s-21.46 126.43-141.5 203.99"/>
+        <path d="M5012.48 1887.38h-75.22v-346.3h77.6c144.03 0 156.54 111.7 156.54 172.81 0 164.66-109.64 173.5-158.92 173.5m7.8-425.6h-174.51v504.88h171.45c227.25 0 244.65-191.38 244.65-252.78 0-130.66-67.39-252.1-241.6-252.1M5339.53 1966.67h91.49V1461.8h-91.5ZM5752.3 1774.21h119.48c-.28 29.05-15.86 117.24-128.28 117.24-38.57 0-142.66-16.75-142.66-177.56 0-112.15 59.46-176.87 142.66-176.87 69.86 0 109.38 42.84 121.64 86.07h92.84c-10.4-67.22-72.64-168.07-215.84-168.07-77.48 0-233.12 45.2-233.12 259.9 0 75.01 35.51 258.53 233.8 258.53 62.3 0 108.1-23.47 144-65.74h2.38l6.78 58.96h65.73v-263.96h-209.4ZM6041.07 1966.67h91.48V1461.8h-91.48ZM6603.62 1461.8h-402.55v76.58h156.2v428.3h90.48v-428.3h155.87ZM6742.38 1768.79l68-203.3h4.07l68.34 203.3Zm14.12-307-178.23 504.88h97.93l41.7-124.69h189.49l41.91 124.7h97.59l-177.9-504.88ZM7196.05 1890.1v-428.3h-91.49v504.87h314.1v-76.58Zm0 0"/>
+      </svg>
+    </div>
+    <p class="eyebrow fade-up">Comercial / Referencia Interna</p>
+    <h1 class="fade-up">Tabela de Consulta Comercial</h1>
+    <p class="subtitle fade-up">Todos os planos, precos, perfis e argumentos. Clique em cada plano para ver detalhes completos.</p>
+    <p class="date fade-up">Atualizado em 18 de marco de 2026</p>
+  </div>
+</header>
+
+<!-- ===== SEÇÃO 1: CARDS POR FAMILIA ===== -->
+<section>
+  <div class="container">
+    <p class="section-title">01</p>
+    <h2 class="section-heading">Todos os Planos</h2>
+    <p class="section-desc">Clique em qualquer card para ver o escopo completo (incluso / nao incluso). Margem tecnica de 10% disponivel para negociacao em todos os planos.</p>
+
+    <!-- FAMILIA: PRE-CATALOGO -->
+    <div class="family-label">
+      <span class="family-text">Pre-Catalogo / One-Shot</span>
+      <span class="family-line"></span>
+    </div>
+    <div class="plans-grid">
+      <div class="plan-card" onclick="openModal('ignition')">
+        <span class="plan-tag ignition">One-Shot / Plano B</span>
+        <p class="plan-number">00</p>
+        <p class="plan-name">IGNITION</p>
+        <p class="plan-price">R$ 5.500 <small>unico</small></p>
+        <p class="plan-setup">Parcelavel em 6x de ~R$ 917</p>
+        <p class="plan-discount">Margem tecnica: ate R$ 4.950</p>
+        <div class="plan-divider"></div>
+        <div class="plan-meta">
+          <strong>Perfil:</strong> Ate R$ 30k/mes. Individual/solo.<br>
+          <strong>Midia:</strong> R$ 500-1.500/mes (cliente opera)
+        </div>
+        <p class="plan-pitch">"Tudo pronto para comecar. Sem mensalidade, sem compromisso."</p>
+        <p class="click-hint">Clique para ver detalhes</p>
+      </div>
+    </div>
+
+    <!-- FAMILIA: TRAFEGO PAGO -->
+    <div class="family-label">
+      <span class="family-text">Trafego Pago (Performance)</span>
+      <span class="family-line"></span>
+    </div>
+    <div class="plans-grid">
+      <div class="plan-card" onclick="openModal('start')">
+        <span class="plan-tag">Tier C / Entrada</span>
+        <p class="plan-number">01</p>
+        <p class="plan-name">TRAFEGO START</p>
+        <p class="plan-price">R$ 2.270 <small>/mes</small></p>
+        <p class="plan-setup">Setup: R$ 1.180</p>
+        <p class="plan-discount">Margem tecnica: ate R$ 2.043/mes</p>
+        <div class="plan-divider"></div>
+        <div class="plan-meta">
+          <strong>Perfil:</strong> R$ 20-50k/mes. Comecando no digital.<br>
+          <strong>Midia:</strong> R$ 1.500-2.000/mes
+        </div>
+        <p class="plan-pitch">"Validamos se o digital funciona. Com metodo, dados e time certificado."</p>
+        <p class="plan-arrow">Evolucao: <span>START > PRO > ADVANCED</span></p>
+        <p class="click-hint">Clique para ver detalhes</p>
+      </div>
+
+      <div class="plan-card" onclick="openModal('pro')">
+        <span class="plan-tag">Tier B/C / ICP Principal</span>
+        <p class="plan-number">02</p>
+        <p class="plan-name">TRAFEGO PRO</p>
+        <p class="plan-price">R$ 3.280 <small>/mes</small></p>
+        <p class="plan-setup">Setup: R$ 1.180</p>
+        <p class="plan-discount">Margem tecnica: ate R$ 2.952/mes</p>
+        <div class="plan-divider"></div>
+        <div class="plan-meta">
+          <strong>Perfil:</strong> R$ 50-120k/mes. Profissionalizando.<br>
+          <strong>Midia:</strong> R$ 3.000-8.000/mes
+        </div>
+        <p class="plan-pitch">"Sweet spot: custo acessivel, resultado profissional."</p>
+        <p class="plan-arrow">Evolucao: <span>PRO > PERF+SOCIAL > ADVANCED</span></p>
+        <p class="click-hint">Clique para ver detalhes</p>
+      </div>
+
+      <div class="plan-card" onclick="openModal('advanced')">
+        <span class="plan-tag">Tier B / Escala</span>
+        <p class="plan-number">03</p>
+        <p class="plan-name">TRAFEGO ADVANCED</p>
+        <p class="plan-price">R$ 5.450 <small>/mes</small></p>
+        <p class="plan-setup">Setup: R$ 1.180</p>
+        <p class="plan-discount">Margem tecnica: ate R$ 4.905/mes</p>
+        <div class="plan-divider"></div>
+        <div class="plan-meta">
+          <strong>Perfil:</strong> R$ 80-200k/mes. Teto com 2 midias.<br>
+          <strong>Midia:</strong> R$ 8.000-15.000/mes
+        </div>
+        <p class="plan-pitch">"3 canais orquestrados. Voce contrata um sistema."</p>
+        <p class="plan-arrow">Evolucao: <span>ADVANCED > DIAMOND</span></p>
+        <p class="click-hint">Clique para ver detalhes</p>
+      </div>
+    </div>
+
+    <!-- FAMILIA: SOCIAL + PERFORMANCE -->
+    <div class="family-label">
+      <span class="family-text">Social Media + Performance</span>
+      <span class="family-line"></span>
+    </div>
+    <div class="plans-grid">
+      <div class="plan-card" onclick="openModal('social')">
+        <span class="plan-tag">Tier B/C / 100% Organico</span>
+        <p class="plan-number">04</p>
+        <p class="plan-name">SOCIAL-PRO</p>
+        <p class="plan-price">R$ 3.320 <small>/mes</small></p>
+        <p class="plan-setup">Setup: R$ 1.180</p>
+        <p class="plan-discount">Margem tecnica: ate R$ 2.988/mes</p>
+        <div class="plan-divider"></div>
+        <div class="plan-meta">
+          <strong>Perfil:</strong> R$ 30-80k/mes. Marca organica primeiro.<br>
+          <strong>Midia:</strong> ZERO (sem trafego pago)
+        </div>
+        <p class="plan-pitch">"Marca forte primeiro, trafego depois."</p>
+        <p class="plan-arrow">Evolucao: <span>SOCIAL-PRO > PERF+SOCIAL+AV</span></p>
+        <p class="click-hint">Clique para ver detalhes</p>
+      </div>
+
+      <div class="plan-card" onclick="openModal('perfsocial')">
+        <span class="plan-tag">Tier B / Perf + Social</span>
+        <p class="plan-number">05</p>
+        <p class="plan-name">PERF PRO + SOCIAL</p>
+        <p class="plan-price">R$ 5.300 <small>/mes</small></p>
+        <p class="plan-setup">Setup: R$ 1.180</p>
+        <p class="plan-discount">Margem tecnica: ate R$ 4.770/mes</p>
+        <div class="plan-divider"></div>
+        <div class="plan-meta">
+          <strong>Perfil:</strong> R$ 40-100k/mes. Perf + presenca social.<br>
+          <strong>Midia:</strong> R$ 5.000-10.000/mes
+        </div>
+        <p class="plan-pitch">"Performance que converte + social que constroi marca."</p>
+        <p class="plan-arrow">Evolucao: <span>PERF+SOCIAL > PERF+SOCIAL+AV</span></p>
+        <p class="click-hint">Clique para ver detalhes</p>
+      </div>
+
+      <div class="plan-card" onclick="openModal('perfsocialav')">
+        <span class="plan-tag best-seller">Best Seller / Tier A/B</span>
+        <p class="plan-number">06</p>
+        <p class="plan-name">PERF PRO + SOCIAL + AV</p>
+        <p class="plan-price">R$ 6.680 <small>/mes</small></p>
+        <p class="plan-setup">Setup: R$ 1.580</p>
+        <p class="plan-discount">Margem tecnica: ate R$ 6.012/mes</p>
+        <div class="plan-divider"></div>
+        <div class="plan-meta">
+          <strong>Perfil:</strong> R$ 50-150k/mes. Perf + social + video.<br>
+          <strong>Midia:</strong> R$ 5.000-10.000/mes
+        </div>
+        <p class="plan-pitch">"1 diaria gera conteudo para o mes inteiro."</p>
+        <p class="plan-arrow">Evolucao: <span>PERF+SOCIAL+AV > DIAMOND</span></p>
+        <p class="click-hint">Clique para ver detalhes</p>
+      </div>
+
+      <div class="plan-card" onclick="openModal('diamond')">
+        <span class="plan-tag">Tier A / Premium 360</span>
+        <p class="plan-number">07</p>
+        <p class="plan-name">DIAMOND</p>
+        <p class="plan-price">R$ 8.780 <small>/mes</small></p>
+        <p class="plan-setup">Setup: R$ 2.580</p>
+        <p class="plan-discount">Margem tecnica: ate R$ 7.902/mes</p>
+        <div class="plan-divider"></div>
+        <div class="plan-meta">
+          <strong>Perfil:</strong> R$ 100-500k/mes. 360 completo.<br>
+          <strong>Midia:</strong> R$ 10.000+/mes
+        </div>
+        <p class="plan-pitch">"A ultima agencia que voce vai precisar."</p>
+        <p class="plan-arrow"><span>Plano maximo</span></p>
+        <p class="click-hint">Clique para ver detalhes</p>
+      </div>
+    </div>
+
+    <!-- FAMILIA: CUSTOMIZADO -->
+    <div class="family-label">
+      <span class="family-text">Proposta Personalizada</span>
+      <span class="family-line"></span>
+    </div>
+    <div class="plans-grid">
+      <div class="plan-card" onclick="openModal('custom')">
+        <span class="plan-tag custom">Sob Consulta / Aprovacao Eduardo</span>
+        <p class="plan-number">&#9733;</p>
+        <p class="plan-name">PROPOSTA PERSONALIZADA</p>
+        <p class="plan-price">Sob consulta</p>
+        <p class="plan-setup">Escopo definido caso a caso</p>
+        <div class="plan-divider"></div>
+        <div class="plan-meta">
+          <strong>Para:</strong> Lancamentos, redes de franquias, projetos especiais, escopo fora do catalogo.<br>
+          <strong>Autorizacao:</strong> Somente com aprovacao expressa de Eduardo (CEO).
+        </div>
+        <p class="plan-pitch">"Cada negocio e unico. Quando o catalogo nao cabe, a gente desenha."</p>
+        <p class="click-hint">Clique para ver detalhes</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== SEÇÃO 2: CASES ===== -->
+<section class="alt">
+  <div class="container">
+    <p class="section-title">02</p>
+    <h2 class="section-heading">Cases de Sucesso</h2>
+    <p class="section-desc">Resultados reais de clientes Atacama. Use nos argumentos de venda.</p>
+
+    <div class="cases-grid">
+      <div class="case-card">
+        <p class="case-tag">Educacao / Franquias</p>
+        <p class="case-name">Grupo Grau Educacional</p>
+        <p class="case-number">160 unidades</p>
+        <p class="case-desc">Comecamos na unidade 3. Hoje sao 160 unidades com trafego gerenciado pela Atacama. Crescimento sustentavel com metodo COSMOS.</p>
+      </div>
+      <div class="case-card">
+        <p class="case-tag">Servicos / Reposicionamento</p>
+        <p class="case-name">Vivaz Lavanderia</p>
+        <p class="case-number">+40% faturamento</p>
+        <p class="case-desc">Reposicionamento completo de marca com trabalho de mais de 1 ano. Performance + social + audiovisual integrados.</p>
+      </div>
+      <div class="case-card">
+        <p class="case-tag">Construcao Civil</p>
+        <p class="case-name">MaxPlural + Freitas</p>
+        <p class="case-number">Cases ativos</p>
+        <p class="case-desc">Construcao civil com ciclo de venda longo. Trafego pago multi-canal gerando leads qualificados de forma previsivel.</p>
+      </div>
+      <div class="case-card">
+        <p class="case-tag">Multi-Segmento</p>
+        <p class="case-name">+250 clientes</p>
+        <p class="case-number">15 anos</p>
+        <p class="case-desc">Laboratorios, pousadas, resorts, escolas, e-commerce, B2B. Google Partner Premier ha 4 anos consecutivos. Top 3% Brasil.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SEÇÃO 3: ARVORE DE DECISAO ===== -->
+<section>
+  <div class="container">
+    <p class="section-title">03</p>
+    <h2 class="section-heading">Arvore de Decisao</h2>
+
+    <div class="tree">
+      <div>
+        <p class="tree-question">O lead se qualifica para recorrencia?</p>
+        <div class="tree-options">
+          <div class="tree-option">
+            <span class="arrow">&#8594;</span>
+            <div>
+              <span class="condition">NAO (fat. &lt; R$ 30k, solo, sem budget)</span><br>
+              <span class="result">&#9654; IGNITION (R$ 5.500 unico)</span>
+            </div>
+          </div>
+          <div class="tree-option">
+            <span class="arrow">&#8594;</span>
+            <div>
+              <span class="condition">SIM: quer trafego pago ou social organico?</span>
+              <div class="tree-sub">
+                <div class="tree-options" style="margin-top:8px;">
+                  <div class="tree-option"><span class="arrow">&#8594;</span><div><span class="condition">Social organico</span><br><span class="result">&#9654; SOCIAL-PRO (R$ 3.320)</span></div></div>
+                  <div class="tree-option"><span class="arrow">&#8594;</span><div><span class="condition">Trafego: 1 midia</span><br><span class="result">&#9654; START (R$ 2.270)</span></div></div>
+                  <div class="tree-option"><span class="arrow">&#8594;</span><div><span class="condition">Trafego: 2 midias, sem social</span><br><span class="result">&#9654; PRO (R$ 3.280)</span></div></div>
+                  <div class="tree-option"><span class="arrow">&#8594;</span><div><span class="condition">2 midias + social, sem video</span><br><span class="result">&#9654; PERF+SOCIAL (R$ 5.300)</span></div></div>
+                  <div class="tree-option"><span class="arrow">&#8594;</span><div><span class="condition">2 midias + social + video</span><br><span class="result">&#9654; PERF+SOCIAL+AV (R$ 6.680)</span></div></div>
+                  <div class="tree-option"><span class="arrow">&#8594;</span><div><span class="condition">3+ midias, sem inbound</span><br><span class="result">&#9654; ADVANCED (R$ 5.450)</span></div></div>
+                  <div class="tree-option"><span class="arrow">&#8594;</span><div><span class="condition">3+ midias + inbound + SEO</span><br><span class="result">&#9654; DIAMOND (R$ 8.780)</span></div></div>
+                  <div class="tree-option"><span class="arrow">&#8594;</span><div><span class="condition">Fora do catalogo (lancamento, franquias, especial)</span><br><span class="result">&#9654; PROPOSTA PERSONALIZADA (consultar Eduardo)</span></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SEÇÃO 4: OBJECOES ===== -->
+<section class="alt">
+  <div class="container">
+    <p class="section-title">04</p>
+    <h2 class="section-heading">Objecoes e Respostas</h2>
+    <div class="objections-grid">
+      <div class="objection-card"><p class="objection-q">"Esta caro"</p><p class="objection-a">Ancoragem: contratar separadamente custa 59-74% mais. IGNITION: "Menos que 3 freelancers. E tudo integrado."</p></div>
+      <div class="objection-card"><p class="objection-q">"Preciso pensar"</p><p class="objection-a">Validade: 10 dias (7 para IGNITION). Follow-up em 3, 5 e 8 dias.</p></div>
+      <div class="objection-card"><p class="objection-q">"Nao tenho budget"</p><p class="objection-a">Oferecer IGNITION: "Sem mensalidade. Pagamento unico. Tudo pronto."</p></div>
+      <div class="objection-card"><p class="objection-q">"Ja tenho agencia"</p><p class="objection-a">"E o resultado? Ta vindo?" Diferenciar: COSMOS, dashboard, certificacao.</p></div>
+      <div class="objection-card"><p class="objection-q">"Vou fazer sozinho"</p><p class="objection-a">"Em quanto tempo? IGNITION entrega tudo em 5-7 dias."</p></div>
+      <div class="objection-card"><p class="objection-q">"Nao preciso de tudo"</p><p class="objection-a">Usar arvore de decisao. "Vendemos clareza, nao excesso."</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SEÇÃO 5: REGRAS ===== -->
+<section>
+  <div class="container">
+    <p class="section-title">05</p>
+    <h2 class="section-heading">Regras de Ouro</h2>
+    <div class="rules-grid">
+      <div class="rule-card"><p class="rule-label">Lead Saudavel</p><p class="rule-value">R$ 30-60 por lead (formulario qualificado)</p></div>
+      <div class="rule-card"><p class="rule-label">Investimento Marketing</p><p class="rule-value">10% faturamento (ate R$ 100k). 5-12% da meta (acima).</p></div>
+      <div class="rule-card"><p class="rule-label">Resposta ao Lead</p><p class="rule-value">Menos WhatsApp, mais ligacao = maior conversao.</p></div>
+      <div class="rule-card"><p class="rule-label">Setup</p><p class="rule-value">NUNCA gratuito. Parcelavel (2-3x), nunca isento.</p></div>
+      <div class="rule-card"><p class="rule-label">Margem Tecnica</p><p class="rule-value">Ate 10% de desconto em qualquer plano. Reserva para fechamento.</p></div>
+      <div class="rule-card"><p class="rule-label">Proposta Personalizada</p><p class="rule-value">Somente com autorizacao expressa de Eduardo (CEO).</p></div>
+      <div class="rule-card"><p class="rule-label">Meta IGNITION</p><p class="rule-value">7-10/mes = R$ 38.500-55.000 de caixa.</p></div>
+      <div class="rule-card"><p class="rule-label">Validade</p><p class="rule-value">10 dias (recorrentes). 7 dias (IGNITION).</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SEÇÃO 6: TIME ===== -->
+<section class="alt">
+  <div class="container">
+    <p class="section-title">06</p>
+    <h2 class="section-heading">Time por Plano</h2>
+    <div class="team-grid">
+      <div class="team-card"><span class="team-plan">IGNITION</span><span class="team-members">Gestor (execucao unica)</span></div>
+      <div class="team-card"><span class="team-plan">START</span><span class="team-members">Gestor + CS</span></div>
+      <div class="team-card"><span class="team-plan">PRO</span><span class="team-members">Gestor + CS</span></div>
+      <div class="team-card"><span class="team-plan">ADVANCED</span><span class="team-members">Gestor + CS + GP</span></div>
+      <div class="team-card"><span class="team-plan">SOCIAL-PRO</span><span class="team-members">CS + Social Media</span></div>
+      <div class="team-card"><span class="team-plan">PERF+SOCIAL</span><span class="team-members">Gestor + CS + Social</span></div>
+      <div class="team-card"><span class="team-plan">PERF+SOCIAL+AV</span><span class="team-members">Gestor + CS + GP + Social + Editor</span></div>
+      <div class="team-card"><span class="team-plan">DIAMOND</span><span class="team-members">Gestor + CS + GP + Social + Editor + Estrategista</span></div>
+      <div class="team-card"><span class="team-plan">PERSONALIZADO</span><span class="team-members">Definido sob consulta</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="container">
+    <div class="footer-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 1240" fill="currentColor">
+        <path d="M1682.36 1220 1188.62 20H951.77v.02H748.23l.01-.02H511.38L17.64 1220h247.7L737.38 46.96v1173.02h225.25V46.96L1434.66 1220Zm0 0"/>
+      </svg>
+    </div>
+    <p class="footer-tagline">Welcome to Clarity.</p>
+    <p class="footer-coords">8&#176;02'36.6" S / 34&#176;53'53.5" W</p>
+  </div>
+</footer>
+
+<!-- ===== MODAIS ===== -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+const plans = {
+  ignition: {
+    tag: 'PRE-CATALOGO / ONE-SHOT',
+    name: 'IGNITION',
+    price: 'R$ 5.500', priceSuffix: 'unico',
+    discount: 'Margem tecnica 10%: ate R$ 4.950. Parcelavel em 6x.',
+    included: [
+      'Landing page template de alta conversao',
+      'Campanhas estruturadas em 1 midia (Meta ou Google)',
+      'Conta configurada + pixel/tag instalado',
+      '2-4 criativos iniciais',
+      'Dashboard basico (Looker Studio, D-1)',
+      'Guia de operacao autonoma (PDF)',
+      'Call de handoff (30 min)',
+    ],
+    excluded: [
+      'Gestao recorrente de campanhas',
+      'Otimizacao continua de anuncios',
+      'Reunioes mensais de performance',
+      'Suporte tecnico pos-entrega',
+      'Producao de criativos novos apos entrega',
+      'Social media',
+      'Producao audiovisual',
+      'Inbound / Automacoes',
+    ],
+    footer: 'Timeline: 5-7 dias uteis. Evolucao: IGNITION > START > PRO. Produto padronizado: zero customizacao.'
+  },
+  start: {
+    tag: 'TIER C / ENTRADA',
+    name: 'TRAFEGO START',
+    price: 'R$ 2.270', priceSuffix: '/mes',
+    discount: 'Margem tecnica 10%: ate R$ 2.043/mes. Setup: R$ 1.180.',
+    included: [
+      'Trafego pago em 1 midia (Meta, Google, LinkedIn ou TikTok)',
+      'Atacama Performance Dashboard (tempo real, D-1)',
+      'Gestor de Trafego certificado',
+      'Customer Success dedicado',
+      'Reuniao mensal de performance (1h)',
+      'Cosmos Review trimestral',
+      'Metodo COSMOS completo desde o dia 1',
+      'Atualizacao diaria no grupo WhatsApp',
+    ],
+    excluded: [
+      'Landing pages (disponivel no PRO)',
+      'Criativos profissionais mensais (disponivel no PRO)',
+      'Social media / posts / stories',
+      'Producao audiovisual',
+      '2a ou 3a midia',
+      'Inbound Marketing / Automacoes',
+      'SEO',
+      'Site institucional',
+    ],
+    footer: 'Midia sugerida: R$ 1.500-2.000/mes. Setup: 10 dias. Evolucao: START > PRO > ADVANCED.'
+  },
+  pro: {
+    tag: 'TIER B/C / ICP PRINCIPAL',
+    name: 'TRAFEGO PRO',
+    price: 'R$ 3.280', priceSuffix: '/mes',
+    discount: 'Margem tecnica 10%: ate R$ 2.952/mes. Setup: R$ 1.180.',
+    included: [
+      'Trafego pago em 2 midias (Google Ads + Meta Ads)',
+      '4 criativos profissionais/mes (foco em performance)',
+      '4 landing pages de alta conversao (CRO + copywriting)',
+      'Atacama Performance Dashboard integrado (dual-channel)',
+      'Gestor de Trafego certificado + Customer Success',
+      'Reuniao mensal (1h) + Cosmos Review trimestral',
+      'Metodo COSMOS completo',
+    ],
+    excluded: [
+      'Social media (posts, stories)',
+      'Producao audiovisual',
+      'Inbound Marketing / Automacoes',
+      '3a midia',
+      'SEO',
+      'Site institucional',
+    ],
+    footer: 'Midia sugerida: R$ 3.000-8.000/mes. Plano mais recomendado (sweet spot). Evolucao: PRO > PERF+SOCIAL > ADVANCED.'
+  },
+  advanced: {
+    tag: 'TIER B / ESCALA MULTI-CANAL',
+    name: 'TRAFEGO ADVANCED',
+    price: 'R$ 5.450', priceSuffix: '/mes',
+    discount: 'Margem tecnica 10%: ate R$ 4.905/mes. Setup: R$ 1.180.',
+    included: [
+      'Trafego pago em 3 midias (Google + Meta + LinkedIn/TikTok)',
+      '6 criativos profissionais/mes adaptados por canal',
+      'Landing pages (conjunto por canal)',
+      'Social media integrada',
+      'Producao audiovisual',
+      'Dashboard multi-canal consolidado com atribuicao',
+      'Gestor + CS + Gerente de Projetos',
+      'Reuniao mensal (1h) + Cosmos Review trimestral (1h30)',
+    ],
+    excluded: [
+      'Inbound Marketing / Automacoes / Email Marketing (DIAMOND)',
+      'SEO avancado',
+      'Consultoria de branding completa',
+    ],
+    footer: 'Midia sugerida: R$ 8.000-15.000/mes. Setup: 10-12 dias. Evolucao: ADVANCED > DIAMOND.'
+  },
+  social: {
+    tag: 'TIER B/C / 100% ORGANICO',
+    name: 'SOCIAL-PRO',
+    price: 'R$ 3.320', priceSuffix: '/mes',
+    discount: 'Margem tecnica 10%: ate R$ 2.988/mes. Setup: R$ 1.180.',
+    included: [
+      'Social Media (12 posts/mes)',
+      'Producao Audiovisual mensal (1 diaria de 5h no Recife)',
+      'Dashboard de crescimento organico',
+      'Customer Success dedicado',
+      'Metodo COSMOS aplicado a crescimento organico',
+      'Reuniao mensal + Cosmos Review trimestral',
+    ],
+    excluded: [
+      'Trafego pago (nenhuma midia paga)',
+      'Landing pages',
+      'Inbound Marketing / Automacoes',
+      'Site institucional',
+      'Deslocamento fora de Recife (custo adicional)',
+    ],
+    footer: 'Investimento em midia: ZERO. Unico plano 100% organico. Evolucao: SOCIAL-PRO > PERF+SOCIAL+AV.'
+  },
+  perfsocial: {
+    tag: 'TIER B / PERFORMANCE + SOCIAL',
+    name: 'PERF PRO + SOCIAL',
+    price: 'R$ 5.300', priceSuffix: '/mes',
+    discount: 'Margem tecnica 10%: ate R$ 4.770/mes. Setup: R$ 1.180.',
+    included: [
+      'Trafego pago em 2 midias (Google + Meta)',
+      'Social Media profissional',
+      'Criativos de performance',
+      'Landing pages',
+      'Dashboard integrado (performance + social)',
+      'Gestor + CS + Social Media',
+      'Reuniao mensal + Cosmos Review trimestral',
+    ],
+    excluded: [
+      'Producao audiovisual (upgrade para plano 06)',
+      'Inbound Marketing / Automacoes',
+      '3a midia',
+      'SEO',
+    ],
+    footer: 'Midia sugerida: R$ 5.000-10.000/mes. Evolucao: PERF+SOCIAL > PERF+SOCIAL+AV > DIAMOND.'
+  },
+  perfsocialav: {
+    tag: 'BEST SELLER / TIER A/B',
+    name: 'PERF PRO + SOCIAL + AV',
+    price: 'R$ 6.680', priceSuffix: '/mes',
+    discount: 'Margem tecnica 10%: ate R$ 6.012/mes. Setup: R$ 1.580.',
+    included: [
+      'Trafego pago em 2 midias (Google + Meta)',
+      'Social Media profissional (12 posts/mes)',
+      'Producao Audiovisual mensal (1 diaria de 5h)',
+      'Criativos para performance + social',
+      'Landing pages',
+      'Dashboard integrado completo',
+      'Gestor + CS + GP + Social Media + Editor',
+      'Reuniao mensal + Cosmos Review trimestral',
+      'Conteudo organico que performa vira criativo pago',
+    ],
+    excluded: [
+      'Inbound Marketing / Automacoes / Email Marketing',
+      '3a midia (upgrade para ADVANCED)',
+      'SEO avancado',
+      'Deslocamento fora de Recife (custo adicional)',
+    ],
+    footer: 'Midia sugerida: R$ 5.000-10.000/mes. Plano mais vendido da Atacama. Evolucao: PERF+SOCIAL+AV > DIAMOND.'
+  },
+  diamond: {
+    tag: 'TIER A / PREMIUM 360',
+    name: 'DIAMOND',
+    price: 'R$ 8.780', priceSuffix: '/mes',
+    discount: 'Margem tecnica 10%: ate R$ 7.902/mes. Setup: R$ 2.580.',
+    included: [
+      'Trafego pago multi-canal (Google + Meta + LinkedIn + outros)',
+      'Social Media completa',
+      'Multiplas producoes audiovisuais',
+      'Inbound Marketing + Automacoes + Email Marketing',
+      'SEO estrategico',
+      'Landing pages ilimitadas',
+      'Dashboard completo integrado',
+      'Time dedicado: Gestor + CS + GP + Social + Editor + Estrategista',
+      'Reuniao mensal + Cosmos Review trimestral (1h30)',
+    ],
+    excluded: [
+      'Investimento em midia paga (sempre a parte)',
+      'Criacao de site institucional',
+      'SAC / Moderacao 24/7',
+      'Consultoria de branding (escopo separado)',
+    ],
+    footer: 'Midia sugerida: R$ 10.000+/mes. Setup: 12-15 dias. Plano maximo. Sistema 360 completo.'
+  },
+  custom: {
+    tag: 'SOB CONSULTA',
+    name: 'PROPOSTA PERSONALIZADA',
+    price: 'Sob consulta', priceSuffix: '',
+    discount: 'Preco e escopo definidos caso a caso. Autorizacao expressa de Eduardo (CEO).',
+    included: [
+      'Escopo desenhado sob medida para o projeto',
+      'Lancamentos de produtos/servicos',
+      'Redes de franquias (multi-unidade)',
+      'Projetos especiais com prazo definido',
+      'Combinacao de servicos fora do catalogo padrao',
+      'Time e timeline customizados',
+    ],
+    excluded: [
+      'NAO pode ser criada sem aprovacao de Eduardo',
+      'NAO segue catalogo padrao (override obrigatorio)',
+      'NAO pode prometer resultados especificos',
+      'NAO pode oferecer exclusividade territorial',
+    ],
+    footer: 'Uso: lancamentos, franquias, projetos especiais. Sempre com tag [OVERRIDE] e aprovacao de Eduardo. Documentar no HTML interno.'
+  }
+};
+
+function openModal(planKey) {
+  const p = plans[planKey];
+  if (!p) return;
+  let html = `
+    <p class="modal-tag">${p.tag}</p>
+    <h3>${p.name}</h3>
+    <p class="modal-price">${p.price} <small>${p.priceSuffix}</small></p>
+    <p class="modal-discount">${p.discount}</p>
+    <p class="modal-section-title">O que esta incluso</p>
+    <ul class="modal-list">
+      ${p.included.map(i => `<li><span class="icon check">&#10003;</span> ${i}</li>`).join('')}
+    </ul>
+    <p class="modal-section-title">O que NAO esta incluso</p>
+    <ul class="modal-list">
+      ${p.excluded.map(i => `<li><span class="icon cross">&#10005;</span> <span class="cross-text">${i}</span></li>`).join('')}
+    </ul>
+    <div class="modal-footer">${p.footer}</div>
+  `;
+  document.getElementById('modal-body').innerHTML = html;
+  document.getElementById('modal-overlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modal-overlay')) return;
+  document.getElementById('modal-overlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+
+</body>
+</html>

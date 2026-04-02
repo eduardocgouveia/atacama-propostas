@@ -14,6 +14,7 @@ import {
   Calendar,
   Clock,
   Download,
+  Pencil,
 } from "lucide-react"
 
 interface ProposalMeta {
@@ -164,6 +165,12 @@ export default function ProposalDetailPage({
         </div>
 
         <div className="flex items-center gap-2 flex-shrink-0">
+          <Link href={`/proposals/new?edit=${id}`}>
+            <Button variant="outline" size="sm">
+              <Pencil className="h-4 w-4" />
+              Editar
+            </Button>
+          </Link>
           <Button variant="outline" size="sm" onClick={handleSave} disabled={saving}>
             {saving ? (
               <Loader2 className="h-4 w-4 animate-spin" />
